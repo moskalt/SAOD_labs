@@ -1,0 +1,3 @@
+/home/lordmoskalt/Desktop/SAOD_labs/train_lab/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/lordmoskalt/Desktop/SAOD_labs/train_lab/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/lordmoskalt/Desktop/SAOD_labs/train_lab/cmake-build-debug/CMakeFiles/train_lab.dir
