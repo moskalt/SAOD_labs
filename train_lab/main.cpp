@@ -150,7 +150,6 @@ public:
     void SelectSort() {
         Node *ptr_current_node = this->ptr_first_node;
         Node *ptr_min;
-        int i = 0;
         do {
             ptr_min = min_element(ptr_current_node);
             if (ptr_min == nullptr) {
@@ -158,7 +157,6 @@ public:
             }
             swap_data(ptr_current_node, ptr_min);
             ptr_current_node = ptr_current_node->ptr_next;
-            i++;
         } while (ptr_current_node->ptr_next != nullptr);
     }
 
