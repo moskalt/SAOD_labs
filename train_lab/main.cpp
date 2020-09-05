@@ -1,46 +1,45 @@
-#include <iostream>
-
+#include <ctime>
 #include <iostream>
 #include <new>
-#include <ctime>
 
 using namespace std;
 
-class List {
+class forward_list {
+
 private:
+    int sum;
+    int qty_of_series;
     struct Node {
         int data;
         Node *ptr_next;
-
         Node() {
             ptr_next = nullptr;
             data = 0;
         }
     };
+    Node *head;
 
 public:
-    Node *ptr_first_node;
-    int sum;
-    int qty_of_series;
-
-    List() {
-        ptr_first_node = nullptr;
+    forward_list() {
+        head = nullptr;
         sum = 0;
         qty_of_series = 1;
     }
-
-    void Add(int data) {
-        Node *ptr_adding_node = new Node;
-        ptr_adding_node->data = data;
-        if (ptr_first_node != nullptr) {
-            GetLastNode_ptr()->ptr_next = ptr_adding_node;
-        } else {
-            ptr_first_node = ptr_adding_node;
+    ~forward_list() {
+        while (head->ptr_next != nullptr) {
+            delete[] head;
+            head = head->ptr_next;
         }
+        delete[] head;
     }
-
-    Node *GetLastNode_ptr() const {
-        Node *ptr_current_node = ptr_first_node;
+    int get_sum() const {
+        return this->sum;
+    }
+    int get_series() const {
+        return this->qty_of_series;
+    }
+    Node *get_last_node_ptr() const {
+        Node *ptr_current_node = head;
         if (ptr_current_node == nullptr) {
             return nullptr;
         }
@@ -49,11 +48,19 @@ public:
         }
         return ptr_current_node;
     }
-
-    void PrintList() {
-        Node *ptr_current_node = ptr_first_node;
+    void add_node(int data) {
+        Node *ptr_adding_node = new Node;
+        ptr_adding_node->data = data;
+        if (head != nullptr) {
+            get_last_node_ptr()->ptr_next = ptr_adding_node;
+        } else {
+            head = ptr_adding_node;
+        }
+    }
+    void printList() {
+        Node *ptr_current_node = head;
         if (ptr_current_node == nullptr) {
-            cout << "List is empty" << endl;
+            cout << "forward_list is empty" << endl;
             return;
         } else {
             do {
@@ -62,39 +69,35 @@ public:
             } while (ptr_current_node != nullptr);
         }
     }
-
-    void FillInc(int size) {
+    void fillInc(int size) {
         int temp = 1;
         while (size > 0) {
             temp += rand() % 10 + 2;
-            this->Add(temp);
+            this->add_node(temp);
             size--;
         }
     }
-
-    void FillDec(int size) {
+    void fillDec(int size) {
         int temp = 500;
         while (size > 0) {
             temp -= rand() % 10 + 2;
-            this->Add(temp);
+            this->add_node(temp);
             size--;
         }
     }
-
-    void FillRand(int size) {
+    void fillRand(int size) {
         int temp;
         while (size > 0) {
             temp = rand() % 100 - 40;
-            this->Add(temp);
+            this->add_node(temp);
             size--;
         }
     }
-
-    void Sum() {
+    void count_sum() {
         this->sum = 0;
-        Node *ptr_current_node = ptr_first_node;
+        Node *ptr_current_node = head;
         if (ptr_current_node == nullptr) {
-            cout << "List is empty" << endl;
+            cout << "forward_list is empty" << endl;
             return;
         } else {
             do {
@@ -103,12 +106,11 @@ public:
             } while (ptr_current_node != nullptr);
         }
     }
-
-    void Series() {
+    void count_series() {
         this->qty_of_series = 1;
-        Node *ptr_current_node = ptr_first_node;
+        Node *ptr_current_node = head;
         if (ptr_current_node == nullptr) {
-            cout << "List is empty" << endl;
+            cout << "forward_list is empty" << endl;
             return;
         } else {
             do {
@@ -119,8 +121,7 @@ public:
             } while (ptr_current_node->ptr_next != nullptr);
         }
     }
-
-    Node *min_element(Node *first_ptr) {
+    static Node *find_min_element(Node *first_ptr) {
         if (first_ptr == nullptr) {
             return nullptr;
         }
@@ -140,44 +141,45 @@ public:
         } while (ptr_current_node != nullptr);
         return min_ptr;
     }
-
-    void swap_data(Node *&ptr_current_node, Node *&ptr_min_node) {
-        int temp = ptr_current_node->data;
+    static void swap_nodes(Node *&ptr_current_node, Node *&ptr_min_node) {
+        int temp_data = ptr_current_node->data;
         ptr_current_node->data = ptr_min_node->data;
-        ptr_min_node->data = temp;
+        ptr_min_node->data = temp_data;
     }
-
-    void SelectSort() {
-        Node *ptr_current_node = this->ptr_first_node;
+    void selectSort() {
+        Node *ptr_current_node = this->head;
         Node *ptr_min;
+        int i = 0;
         do {
-            ptr_min = min_element(ptr_current_node);
+            ptr_min = find_min_element(ptr_current_node);
             if (ptr_min == nullptr) {
                 break;
             }
-            swap_data(ptr_current_node, ptr_min);
+            swap_nodes(ptr_current_node, ptr_min);
             ptr_current_node = ptr_current_node->ptr_next;
+            i++;
         } while (ptr_current_node->ptr_next != nullptr);
     }
-
 };
 
 
 int main() {
     srand(time(NULL));
-    List list;
-    list.FillRand(10);
-    list.PrintList();
-    list.Sum();
-    list.Series();
-    cout << endl << "sum: " <<list.sum << endl;
-    cout << "series: " << list.qty_of_series << endl;
-    list.SelectSort();
+    forward_list list;
+    list.fillRand(10);
+    list.printList();
+    list.count_sum();
+    list.count_series();
+    cout << endl
+         << "sum: " << list.get_sum() << endl;
+    cout << "series: " << list.get_series() << endl;
+    list.selectSort();
     cout << endl;
-    list.PrintList();
-    list.Sum();
-    list.Series();
-    cout << endl << "sum: " <<list.sum << endl;
-    cout << "series: " << list.qty_of_series << endl;
+    list.printList();
+    list.count_sum();
+    list.count_series();
+    cout << endl
+         << "sum: " << list.get_sum() << endl;
+    cout << "series: " << list.get_series() << endl;
     return 0;
 }
