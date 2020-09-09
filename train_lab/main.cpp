@@ -9,35 +9,42 @@ class forward_list {
 private:
     int sum;
     int qty_of_series;
+
     struct Node {
         int data;
         Node *ptr_next;
+
         Node() {
             ptr_next = nullptr;
             data = 0;
         }
     };
+
     Node *head;
 
 public:
     forward_list() {
         head = nullptr;
         sum = 0;
-        qty_of_series = 1;
+        qty_of_series = 0;
     }
+
     ~forward_list() {
-        while (head->ptr_next != nullptr) {
-            delete[] head;
-            head = head->ptr_next;
+        Node* temp = head;
+        while (head != nullptr) {
+            temp = head->ptr_next;
+            delete temp;
         }
-        delete[] head;
     }
+
     int get_sum() const {
         return this->sum;
     }
+
     int get_series() const {
         return this->qty_of_series;
     }
+
     Node *get_last_node_ptr() const {
         Node *ptr_current_node = head;
         if (ptr_current_node == nullptr) {
@@ -48,6 +55,7 @@ public:
         }
         return ptr_current_node;
     }
+
     void add_node(int data) {
         Node *ptr_adding_node = new Node;
         ptr_adding_node->data = data;
@@ -57,11 +65,11 @@ public:
             head = ptr_adding_node;
         }
     }
+
     void printList() {
         Node *ptr_current_node = head;
         if (ptr_current_node == nullptr) {
             cout << "forward_list is empty" << endl;
-            return;
         } else {
             do {
                 cout << ptr_current_node->data << "  ";
@@ -69,6 +77,7 @@ public:
             } while (ptr_current_node != nullptr);
         }
     }
+
     void fillInc(int size) {
         int temp = 1;
         while (size > 0) {
@@ -77,6 +86,7 @@ public:
             size--;
         }
     }
+
     void fillDec(int size) {
         int temp = 500;
         while (size > 0) {
@@ -85,6 +95,7 @@ public:
             size--;
         }
     }
+
     void fillRand(int size) {
         int temp;
         while (size > 0) {
@@ -93,12 +104,12 @@ public:
             size--;
         }
     }
+
     void count_sum() {
         this->sum = 0;
         Node *ptr_current_node = head;
         if (ptr_current_node == nullptr) {
             cout << "forward_list is empty" << endl;
-            return;
         } else {
             do {
                 sum += ptr_current_node->data;
@@ -106,13 +117,15 @@ public:
             } while (ptr_current_node != nullptr);
         }
     }
+
     void count_series() {
-        this->qty_of_series = 1;
+        this->qty_of_series = 0;
         Node *ptr_current_node = head;
         if (ptr_current_node == nullptr) {
             cout << "forward_list is empty" << endl;
-            return;
+
         } else {
+            qty_of_series++;
             do {
                 if (ptr_current_node->data > ptr_current_node->ptr_next->data) {
                     qty_of_series++;
@@ -121,6 +134,7 @@ public:
             } while (ptr_current_node->ptr_next != nullptr);
         }
     }
+
     static Node *find_min_element(Node *first_ptr) {
         if (first_ptr == nullptr) {
             return nullptr;
@@ -141,11 +155,13 @@ public:
         } while (ptr_current_node != nullptr);
         return min_ptr;
     }
+
     static void swap_nodes(Node *&ptr_current_node, Node *&ptr_min_node) {
         int temp_data = ptr_current_node->data;
         ptr_current_node->data = ptr_min_node->data;
         ptr_min_node->data = temp_data;
     }
+
     void selectSort() {
         Node *ptr_current_node = this->head;
         Node *ptr_min;
