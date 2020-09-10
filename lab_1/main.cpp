@@ -17,8 +17,10 @@ private:
         }
     };
 
-    Vertex *ptr_root = nullptr;
+
 public:
+    Vertex *ptr_root = nullptr;
+
     Tree() {
         Vertex *new_ptr = new Vertex;
         this->ptr_root = new_ptr;
@@ -73,17 +75,60 @@ public:
         }
     }
 
-    void PrintLeftToRight(Vertex* pVertex){
-        if(pVertex != nullptr){
-            cout.width(4);
+    void PrintLeftToRight(Vertex *pVertex) {
+        if (pVertex != nullptr) {
             PrintLeftToRight(pVertex->ptr_l_Vertex);
-            cout << pVertex->ptr_l_Vertex->data << endl;
+            cout << pVertex->data << " ";
             PrintLeftToRight(pVertex->ptr_r_Vertex);
         }
     }
 
-    Vertex *GetRoot() {
-        return this->ptr_root;
+    void PrintTopBottom(Vertex *pVertex) {
+        if (pVertex != nullptr) {
+            cout << pVertex->data << " ";
+            PrintTopBottom(pVertex->ptr_l_Vertex);
+            PrintTopBottom(pVertex->ptr_r_Vertex);
+        }
+    }
+
+    void PrintBottomTop(Vertex *pVertex) {
+        if (pVertex != nullptr) {
+            PrintBottomTop(pVertex->ptr_l_Vertex);
+            PrintBottomTop(pVertex->ptr_r_Vertex);
+            cout << pVertex->data << " ";
+        }
+    }
+
+
+    void GetRoot() {
+        if (this->ptr_root == nullptr) {
+            Vertex *new_ptr_root = new Vertex;
+            this->ptr_root = new_ptr_root;
+        }
+    }
+
+    void FillTree() {
+        const int size = 6;
+        int array[6];
+        for (int i = 0; i < 6; i++) {
+            array[i] = i + 1;
+        }
+        Vertex *temp_ptr = this->ptr_root;
+        temp_ptr->data = array[0];
+        temp_ptr->ptr_r_Vertex = CreateVertex();
+        temp_ptr = temp_ptr->ptr_r_Vertex;
+        temp_ptr->data = array[2];
+        temp_ptr->ptr_l_Vertex = CreateVertex();
+        temp_ptr->ptr_l_Vertex->data = array[1];
+        temp_ptr->ptr_r_Vertex = CreateVertex();
+        temp_ptr = temp_ptr->ptr_r_Vertex;
+        temp_ptr->data = array[5];
+        temp_ptr->ptr_l_Vertex = CreateVertex();
+        temp_ptr = temp_ptr->ptr_l_Vertex;
+        temp_ptr->data = array[4];
+        temp_ptr->ptr_l_Vertex = CreateVertex();
+        temp_ptr = temp_ptr->ptr_l_Vertex;
+        temp_ptr->data = array[3];
     }
 
 
@@ -91,6 +136,14 @@ public:
 
 int main() {
     Tree tree;
-    tree.CreateTree(5,tree.GetRoot());
+    tree.GetRoot();
+    tree.FillTree();
+    cout << "LeftRight print :" << endl;
+    tree.PrintLeftToRight(tree.ptr_root);
+    cout << endl << "TopBottom print :" << endl;
+    tree.PrintTopBottom(tree.ptr_root);
+    cout << endl <<"BottomTop print :" << endl;
+    tree.PrintBottomTop(tree.ptr_root);
+    //creating tree from task
     return 0;
 }
