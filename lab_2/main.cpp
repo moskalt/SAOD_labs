@@ -12,12 +12,14 @@ private:
         int data;
         Vertex *ptr_r_Vertex;
         Vertex *ptr_l_Vertex;
+
         Vertex() {
             ptr_l_Vertex = nullptr;
             ptr_r_Vertex = nullptr;
             data = 0;
         }
     };
+
     vector<int> array;
 
 public:
@@ -59,7 +61,7 @@ public:
 
     void FillVector(int tree_size) {
         for (int i = 0; i < tree_size; i++) {
-            this->array.push_back(rand() % 100 - 50);
+            this->array.push_back(rand() % 200 - 100);
         }
         sort(this->array.begin(), this->array.end());
     }
@@ -76,8 +78,11 @@ public:
             return root;
         }
     }
+
     void GetRoot() { this->ptr_root = TreeBuild(0, this->array.size() - 1); }
+
     Vertex *ReturnRoot() { return this->ptr_root; }
+
     int MaxTreeHeight(Vertex *pVertex) {
         if (pVertex == nullptr) {
             return 0;
@@ -85,13 +90,16 @@ public:
             return 1 + max(MaxTreeHeight(pVertex->ptr_l_Vertex), MaxTreeHeight(pVertex->ptr_r_Vertex));
         }
     }
-    int MidTreeHeight(Vertex *pVertex, int level) {
+
+    float MidTreeHeight(Vertex *pVertex, int level) {
         if (pVertex == nullptr) {
             return 0;
         } else {
-            return level + MidTreeHeight(pVertex->ptr_l_Vertex, level + 1) + MidTreeHeight(pVertex->ptr_r_Vertex, level + 1);
+            return level + MidTreeHeight(pVertex->ptr_l_Vertex, level + 1) +
+                   MidTreeHeight(pVertex->ptr_r_Vertex, level + 1);
         }
     }
+
     int TreeSize(Vertex *pVertex) {
         if (pVertex == nullptr)
             return 0;
@@ -99,12 +107,31 @@ public:
             return 1 + TreeSize(pVertex->ptr_l_Vertex) +
                    TreeSize(pVertex->ptr_r_Vertex);
     }
+
     int TreeSum(Vertex *pVertex) {
         if (pVertex == nullptr)
             return 0;
         else
             return pVertex->data + TreeSum(pVertex->ptr_l_Vertex) +
                    TreeSum(pVertex->ptr_r_Vertex);
+    }
+
+    int SearchTree(Vertex *root, int key) {
+        if (key == root->data) {
+            cout << root->data;
+            return 1;
+        }
+        if (root->ptr_r_Vertex == nullptr && root->ptr_l_Vertex == nullptr) {
+            return 0;
+        }
+        if (key > root->data) {
+            cout << root->data << " ";
+            SearchTree(root->ptr_r_Vertex, key);
+        } else if (key < root->data) {
+            cout << root->data << " ";
+            SearchTree(root->ptr_l_Vertex, key);
+        }
+
     }
 };
 
@@ -118,15 +145,26 @@ int main() {
     tree.GetRoot();
     cout << endl;
     tree.PrintLeftToRight(tree.ReturnRoot());
+    cout << endl;
+    tree.PrintTopBottom(tree.ReturnRoot());
+    cout << endl;
     tree.TreeSum(tree.ReturnRoot());
     cout << endl;
     int size = tree.TreeSize(tree.ReturnRoot());
     int sum = tree.TreeSum(tree.ReturnRoot());
     int height = tree.MaxTreeHeight(tree.ReturnRoot());
-    int midHeight = tree.MidTreeHeight(tree.ReturnRoot(), 1);
+    float midHeight = tree.MidTreeHeight(tree.ReturnRoot(), 1);
     cout << "Tree size: " << size << endl;
     cout << "Tree sum: " << sum << endl;
     cout << "Tree height: " << height << endl;
     cout << "Tree mid-height: " << midHeight / size << endl;
+    cout << "Input key" << endl;
+    int key;
+    cin >> key;
+    bool check = tree.SearchTree(tree.ReturnRoot(), key);
+    if (check == 1) {
+        cout << endl << "True";
+    }else
+        cout << endl << "False";
     return 0;
 }
