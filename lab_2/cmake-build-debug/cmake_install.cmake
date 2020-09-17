@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/LordMoskalt/Desktop/SAOD_labs/lab_2
+# Install script for directory: /Users/aleksandrmorozov/Desktop/My_folder/#SibGucci/3_sem/SAOD/SAOD_labs/lab_2
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/lab_2")
+  set(CMAKE_INSTALL_PREFIX "/usr/local")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/LordMoskalt/Desktop/SAOD_labs/lab_2/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/aleksandrmorozov/Desktop/My_folder/#SibGucci/3_sem/SAOD/SAOD_labs/lab_2/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
