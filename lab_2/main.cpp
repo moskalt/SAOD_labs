@@ -19,7 +19,7 @@ private:
             data = 0;
         }
     };
-
+    vector<int> array;
 
 public:
     Vertex *ptr_root = nullptr;
@@ -58,25 +58,30 @@ public:
         }
     }
 
-
-    void GetRoot() {
-        if (this->ptr_root == nullptr) {
-            Vertex *new_ptr_root = new Vertex;
-            this->ptr_root = new_ptr_root;
+    void FillVector(int tree_size){
+        for (int i = 0; i < tree_size; i++) {
+            this->array.push_back(rand() % 100 - 50);
         }
+        sort(this->array.begin(), this->array.end());
     }
 
-    Vertex *TreeBuild(int size_left, int size_right, vector<int> array) {
+    Vertex *TreeBuild(int size_left, int size_right) {
         if (size_left > size_right)
             return nullptr;
         else {
             int middle = (size_left + size_right) / 2;
             Vertex* root = CreateVertex();
-            root->data = array[middle];
-            root->ptr_l_Vertex = TreeBuild(size_left, middle - 1,array);
-            root->ptr_r_Vertex = TreeBuild(middle + 1, size_right, array);
+            root->data = this->array[middle];
+            root->ptr_l_Vertex = TreeBuild(size_left, middle - 1);
+            root->ptr_r_Vertex = TreeBuild(middle + 1, size_right);
             return root;
         }
+    }
+    void GetRoot(){
+        this->ptr_root = TreeBuild(0, this->array.size()-1);
+    }
+    Vertex* ReturnRoot(){
+        return this->ptr_root;
     }
 };
 
@@ -85,17 +90,9 @@ int main() {
     cout << "Input tree size" << endl;
     int tree_size;
     cin >> tree_size;
-    vector<int> array;
-    for (int i = 0; i < tree_size; i++) {
-        array.push_back(rand() % 100 - 50);
-    }
-    sort(array.begin(), array.end());
-    for (auto &item: array) {
-        cout.width(3);
-        cout << item << " ";
-    }
     Tree tree;
-    tree.TreeBuild(0, array.size()-1, array);
-    tree.PrintLeftToRight()
+    tree.FillVector(tree_size);
+    tree.GetRoot();
+    tree.PrintLeftToRight(tree.ReturnRoot());
     return 0;
 }
