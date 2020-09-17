@@ -6,6 +6,7 @@
 using namespace std;
 
 class Tree {
+
 private:
     struct Vertex {
         int data;
@@ -119,9 +120,13 @@ int main() {
     tree.PrintLeftToRight(tree.ReturnRoot());
     tree.TreeSum(tree.ReturnRoot());
     cout << endl;
-    cout << "Tree size: " << tree.TreeSize(tree.ReturnRoot()) << endl;
-    cout << "Tree sum: " << tree.TreeSum(tree.ReturnRoot()) << endl;
-    cout << "Tree height: " << tree.MaxTreeHeight(tree.ReturnRoot()) << endl;
-    cout << "Tree mid-height: " << tree.MidTreeHeight(tree.ReturnRoot(), 1) / tree.TreeSize(tree.ReturnRoot()) << endl;
+    int size = tree.TreeSize(tree.ReturnRoot());
+    int sum = tree.TreeSum(tree.ReturnRoot());
+    int height = tree.MaxTreeHeight(tree.ReturnRoot());
+    int midHeight = tree.MidTreeHeight(tree.ReturnRoot(), 1);
+    cout << "Tree size: " << size << endl;
+    cout << "Tree sum: " << sum << endl;
+    cout << "Tree height: " << height << endl;
+    cout << "Tree mid-height: " << midHeight / size << endl;
     return 0;
 }
