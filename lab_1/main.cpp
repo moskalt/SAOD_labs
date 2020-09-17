@@ -142,7 +142,7 @@ int main() {
     tree.PrintLeftToRight(tree.ptr_root);
     cout << endl << "TopBottom print :" << endl;
     tree.PrintTopBottom(tree.ptr_root);
-    cout << endl <<"BottomTop print :" << endl;
+    cout << endl << "BottomTop print :" << endl;
     tree.PrintBottomTop(tree.ptr_root);
     //creating tree from task
     return 0;

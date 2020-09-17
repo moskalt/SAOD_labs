@@ -1,4 +1,4 @@
-/home/lordmoskalt/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/202.6948.80/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/lordmoskalt/Desktop/SAOD_labs/lab_1
+C:\Users\LordMoskalt\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\202.6948.80\bin\cmake\win\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" C:\Users\LordMoskalt\Desktop\SAOD_labs\lab_1
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/lordmoskalt/Desktop/SAOD_labs/lab_1/cmake-build-debug
+-- Build files have been written to: C:/Users/LordMoskalt/Desktop/SAOD_labs/lab_1/cmake-build-debug
