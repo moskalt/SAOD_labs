@@ -20,6 +20,8 @@ private:
         }
     };
     vector<int> array;
+    int tree_size = 0;
+    int tree_sum = 0;
 
 public:
     Vertex *ptr_root = nullptr;
@@ -83,6 +85,20 @@ public:
     Vertex* ReturnRoot(){
         return this->ptr_root;
     }
+
+    int TreeSize(Vertex* pVertex){
+        if(pVertex == nullptr)
+            return 0;
+        else
+            return 1 + TreeSize(pVertex->ptr_l_Vertex) + TreeSize(pVertex->ptr_r_Vertex);
+    }
+
+    int TreeSum(Vertex* pVertex){
+        if(pVertex == nullptr)
+            return 0;
+        else
+            return pVertex->data + TreeSum(pVertex->ptr_l_Vertex) + TreeSum(pVertex->ptr_r_Vertex);
+    }
 };
 
 int main() {
@@ -93,6 +109,10 @@ int main() {
     Tree tree;
     tree.FillVector(tree_size);
     tree.GetRoot();
+    cout << endl;
     tree.PrintLeftToRight(tree.ReturnRoot());
+    tree.TreeSum(tree.ReturnRoot());
+    cout <<"Tree size: " <<tree.TreeSize(tree.ReturnRoot()) << endl;
+    cout <<"Tree sum: " << tree.TreeSum(tree.ReturnRoot()) << endl;
     return 0;
 }
