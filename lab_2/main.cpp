@@ -1,4 +1,7 @@
 #include <iostream>
+#include <ctime>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -63,9 +66,36 @@ public:
         }
     }
 
-
+    Vertex *TreeBuild(int size_left, int size_right, vector<int> array) {
+        if (size_left > size_right)
+            return nullptr;
+        else {
+            int middle = (size_left + size_right) / 2;
+            Vertex* root = CreateVertex();
+            root->data = array[middle];
+            root->ptr_l_Vertex = TreeBuild(size_left, middle - 1,array);
+            root->ptr_r_Vertex = TreeBuild(middle + 1, size_right, array);
+            return root;
+        }
+    }
 };
 
 int main() {
+    srand(time(NULL));
+    cout << "Input tree size" << endl;
+    int tree_size;
+    cin >> tree_size;
+    vector<int> array;
+    for (int i = 0; i < tree_size; i++) {
+        array.push_back(rand() % 100 - 50);
+    }
+    sort(array.begin(), array.end());
+    for (auto &item: array) {
+        cout.width(3);
+        cout << item << " ";
+    }
+    Tree tree;
+    tree.TreeBuild(0, array.size()-1, array);
+    tree.PrintLeftToRight()
     return 0;
 }
