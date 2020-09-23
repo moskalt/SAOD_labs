@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <random>
+#include <ctime>
 
 using namespace std;
 
@@ -59,9 +60,9 @@ public:
         }
     }
 
-    void FillVector(int tree_size, mt19937_64 mersenne) {
+    void FillVector(int tree_size, uniform_int_distribution<unsigned long long> dis, mt19937_64 mers) {
         for (int i = 0; i < tree_size; i++) {
-            this->array.push_back(mersenne() % 200 - 50);
+            this->array.push_back(dis(mers) % 200 - 50);
         }
         //        sort(this->array.begin(), this->array.end());
     }
@@ -126,7 +127,6 @@ public:
             } else if (key > (*head_ptr)->data) {
                 head_ptr = &((*head_ptr)->ptr_r_Vertex);
             } else {
-                cout << "Err" << endl;
                 break;
             }
         }
@@ -166,12 +166,15 @@ public:
 
 int main() {
     random_device rd;
-    mt19937_64 mersenne(rd());
+    mt19937_64 mersenne;
+    uint64_t new_seed = time(NULL);
+    mersenne.seed(new_seed);
+    uniform_int_distribution<unsigned long long> dis;
     Tree tree;
     int tree_size;
     cout << "input tree_size: ";
     cin >> tree_size;
-    tree.FillVector(tree_size, mersenne);
+    tree.FillVector(tree_size, dis, mersenne);
     tree.CreateRandomSearchTreeDI();
     cout << "LeftToRight: " << endl;
     tree.PrintLeftToRight(tree.ReturnRoot());
@@ -179,7 +182,8 @@ int main() {
     tree.PrintTopBottom(tree.ReturnRoot());
     cout << endl;
     Tree wood;
-    wood.FillVector(tree_size, mersenne);
+    mersenne.seed(new_seed%12);
+    wood.FillVector(tree_size, dis ,mersenne);
     wood.CreateRandomSearchTreeRecursive();
     cout << "LeftToRight: " << endl;
     tree.PrintLeftToRight(wood.ReturnRoot());
