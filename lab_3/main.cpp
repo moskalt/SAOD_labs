@@ -63,7 +63,7 @@ public:
         for (int i = 0; i < tree_size; i++) {
             this->array.push_back(rand() % 200 - 100);
         }
-        sort(this->array.begin(), this->array.end());
+        //        sort(this->array.begin(), this->array.end());
     }
 
     Vertex *TreeBuild(int size_left, int size_right) {
@@ -132,40 +132,28 @@ public:
             SearchTree(root->ptr_l_Vertex, key);
         }
     }
+    void DoubleIndirection(int key, Vertex *root) {
+        Vertex **head_ptr = &root;
+        while (*head_ptr) {
+            if (key < (*head_ptr)->data) {
+                head_ptr = &((*head_ptr)->ptr_l_Vertex);
+            } else if (key > (*head_ptr)->data) {
+                head_ptr = &((*head_ptr)->ptr_r_Vertex);
+            } else {
+                cout << "Err" << endl;
+                break;
+            }
+        }
+        if (*head_ptr == nullptr) {
+            *head_ptr = CreateVertex();
+            (*head_ptr)->data = key;
+            (*head_ptr)->ptr_r_Vertex = nullptr;
+            (*head_ptr)->ptr_l_Vertex = nullptr;
+        }
+    }
 };
 
 int main() {
-    srand(time(NULL));
-    cout << "Input tree size" << endl;
-    int tree_size;
-    cin >> tree_size;
-    Tree tree;
-    tree.FillVector(tree_size);
-    tree.GetRoot();
-    cout << endl;
-    tree.PrintLeftToRight(tree.ReturnRoot());
-    cout << endl;
-    tree.PrintTopBottom(tree.ReturnRoot());
-    cout << endl;
-    tree.TreeSum(tree.ReturnRoot());
-    cout << endl;
-    int size = tree.TreeSize(tree.ReturnRoot());
-    int sum = tree.TreeSum(tree.ReturnRoot());
-    int height = tree.MaxTreeHeight(tree.ReturnRoot());
-    float midHeight = tree.MidTreeHeight(tree.ReturnRoot(), 1);
-    cout << "Tree size: " << size << endl;
-    cout << "Tree sum: " << sum << endl;
-    cout << "Tree height: " << height << endl;
-    cout << "Tree mid-height: " << midHeight / size << endl;
-    cout << "Input key" << endl;
-    int key;
-    cin >> key;
-    bool check = tree.SearchTree(tree.ReturnRoot(), key);
-    if (check == 1) {
-        cout << endl
-             << "True";
-    } else
-        cout << endl
-             << "False";
+
     return 0;
 }
