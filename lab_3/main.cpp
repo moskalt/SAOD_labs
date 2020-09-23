@@ -1,131 +1,71 @@
 #include <algorithm>
+#include <chrono>
 #include <iostream>
-#include <vector>
 #include <random>
-#include <ctime>
+#include <vector>
 
 using namespace std;
+
+struct Vertex {
+    int data;
+    Vertex *ptrRight;
+    Vertex *ptrLeft;
+    Vertex() {
+        ptrLeft = nullptr;
+        ptrRight = nullptr;
+        data = 0;
+    }
+};
+Vertex *CreateVertex() {
+    auto *pVertex = new Vertex;
+    return pVertex;
+}
+int GetRandomNumber(int rangeLeft, int rangeRight) {
+    if (rangeLeft >= rangeRight) {
+        return 0;
+    }
+    auto seed = chrono::high_resolution_clock::now().time_since_epoch().count();
+    default_random_engine randomGenerator(seed);
+    uniform_int_distribution<int> diceRoll(rangeLeft, rangeRight);
+    return diceRoll(randomGenerator);
+}
 
 class Tree {
 
 private:
-    struct Vertex {
-        int data;
-        Vertex *ptr_r_Vertex;
-        Vertex *ptr_l_Vertex;
-
-        Vertex() {
-            ptr_l_Vertex = nullptr;
-            ptr_r_Vertex = nullptr;
-            data = 0;
-        }
-    };
-
-    vector<int> array;
-    Vertex *ptr_root = nullptr;
-public:
-    Tree() {
-        Vertex *new_ptr = new Vertex;
-        this->ptr_root = new_ptr;
-    }
-
-    Vertex *CreateVertex() {
-        Vertex *pVertex = new Vertex;
-        pVertex->ptr_l_Vertex = nullptr;
-        pVertex->ptr_r_Vertex = nullptr;
-        return pVertex;
-    }
-
-    void PrintLeftToRight(Vertex *pVertex) {
-        if (pVertex != nullptr) {
-            PrintLeftToRight(pVertex->ptr_l_Vertex);
-            cout << pVertex->data << " ";
-            PrintLeftToRight(pVertex->ptr_r_Vertex);
-        }
-    }
-
-    void PrintTopBottom(Vertex *pVertex) {
-        if (pVertex != nullptr) {
-            cout << pVertex->data << " ";
-            PrintTopBottom(pVertex->ptr_l_Vertex);
-            PrintTopBottom(pVertex->ptr_r_Vertex);
-        }
-    }
-
-    void PrintBottomTop(Vertex *pVertex) {
-        if (pVertex != nullptr) {
-            PrintBottomTop(pVertex->ptr_l_Vertex);
-            PrintBottomTop(pVertex->ptr_r_Vertex);
-            cout << pVertex->data << " ";
-        }
-    }
-
-    void FillVector(int tree_size, uniform_int_distribution<unsigned long long> dis, mt19937_64 mers) {
+    vector<int> m_array;
+    int m_size = 0;
+    void fillVector(int tree_size) {
         for (int i = 0; i < tree_size; i++) {
-            this->array.push_back(dis(mers) % 200 - 50);
-        }
-        //        sort(this->array.begin(), this->array.end());
-    }
-
-    Vertex *ReturnRoot() { return this->ptr_root; }
-
-    int MaxTreeHeight(Vertex *pVertex) {
-        if (pVertex == nullptr) {
-            return 0;
-        } else {
-            return 1 + max(MaxTreeHeight(pVertex->ptr_l_Vertex), MaxTreeHeight(pVertex->ptr_r_Vertex));
+            this->m_array.push_back(GetRandomNumber(-100, 100));
         }
     }
-
-    float MidTreeHeight(Vertex *pVertex, int level) {
-        if (pVertex == nullptr) {
-            return 0;
-        } else {
-            return level + MidTreeHeight(pVertex->ptr_l_Vertex, level + 1) +
-                   MidTreeHeight(pVertex->ptr_r_Vertex, level + 1);
+    void printVector() {
+        cout << "Initial array" << endl;
+        for (auto &i : m_array) {
+            cout << i << " ";
+        }
+        cout << endl;
+    }
+    static void addRecursive(int key, Vertex **head) {
+        if (*head == nullptr) {
+            *head = CreateVertex();
+            (*head)->data = key;
+        } else if ((*head)->data > key) {
+            addRecursive(key, &(*head)->ptrLeft);
+        } else if ((*head)->data < key) {
+            addRecursive(key, &(*head)->ptrRight);
+        } else if ((*head)->data == key) {
+            //return;
         }
     }
-
-    int TreeSize(Vertex *pVertex) {
-        if (pVertex == nullptr)
-            return 0;
-        else
-            return 1 + TreeSize(pVertex->ptr_l_Vertex) +
-                   TreeSize(pVertex->ptr_r_Vertex);
-    }
-
-    int TreeSum(Vertex *pVertex) {
-        if (pVertex == nullptr)
-            return 0;
-        else
-            return pVertex->data + TreeSum(pVertex->ptr_l_Vertex) +
-                   TreeSum(pVertex->ptr_r_Vertex);
-    }
-
-    int SearchTree(Vertex *root, int key) {
-        if (key == root->data) {
-            cout << root->data;
-            return 1;
-        }
-        if (root->ptr_r_Vertex == nullptr && root->ptr_l_Vertex == nullptr) {
-            return 0;
-        }
-        if (key > root->data) {
-            cout << root->data << " ";
-            SearchTree(root->ptr_r_Vertex, key);
-        } else if (key < root->data) {
-            cout << root->data << " ";
-            SearchTree(root->ptr_l_Vertex, key);
-        }
-    }
-
-    void DoubleIndirection(int key, Vertex *root) {
+    static void addDoubleIndirection(int key, Vertex *root) {
         Vertex **head_ptr = &root;
         while (*head_ptr) {
             if (key < (*head_ptr)->data) {
-                head_ptr = &((*head_ptr)->ptr_l_Vertex);
+                head_ptr = &((*head_ptr)->ptrLeft);
             } else if (key > (*head_ptr)->data) {
-                head_ptr = &((*head_ptr)->ptr_r_Vertex);
+                head_ptr = &((*head_ptr)->ptrRight);
             } else {
                 break;
             }
@@ -136,59 +76,115 @@ public:
         }
     }
 
-    void CreateRandomSearchTreeDI() {
-        for (auto &item: this->array) {
-            DoubleIndirection(item, this->ptr_root);
+public:
+    explicit Tree(int size) {
+        this->m_size = size;
+        fillVector(m_size);
+        printVector();
+    }
+    void printLeftToRight(Vertex *root) {
+        if (root != nullptr) {
+            printLeftToRight(root->ptrLeft);
+            cout << root->data << " ";
+            printLeftToRight(root->ptrRight);
         }
     }
-
-    void AddRecursive(int key, Vertex **temp ) {
-        if(*temp == nullptr){
-            *temp = CreateVertex();
-            (*temp)->data = key;
-        }
-        else if((*temp)->data > key){
-            AddRecursive(key,&(*temp)->ptr_l_Vertex);
-        }
-        else if((*temp)->data < key){
-            AddRecursive(key, &(*temp)->ptr_r_Vertex);
-        }
-        else if((*temp)->data == key){
-            return;
+    void printTopToBottom(Vertex *root) {
+        if (root != nullptr) {
+            cout << root->data << " ";
+            printTopToBottom(root->ptrLeft);
+            printTopToBottom(root->ptrRight);
         }
     }
-    void CreateRandomSearchTreeRecursive() {
-        for (auto &item: this->array) {
-            AddRecursive(item, &this->ptr_root);
+    void printBottomToTop(Vertex *root) {
+        if (root != nullptr) {
+            printBottomToTop(root->ptrLeft);
+            printBottomToTop(root->ptrRight);
+            cout << root->data << " ";
+        }
+    }
+    int treeSize(Vertex *pVertex) {
+        if (pVertex == nullptr)
+            return 0;
+        else
+            return 1 + treeSize(pVertex->ptrLeft) +
+                   treeSize(pVertex->ptrRight);
+    }
+    int treeControlSum(Vertex *root) {
+        if (root == nullptr)
+            return 0;
+        else
+            return root->data + treeControlSum(root->ptrLeft) +
+                   treeControlSum(root->ptrRight);
+    }
+    int maxTreeHeight(Vertex *root) {
+        if (root == nullptr) {
+            return 0;
+        } else {
+            return 1 + max(maxTreeHeight(root->ptrLeft), maxTreeHeight(root->ptrRight));
+        }
+    }
+    float averageTreeHeight(Vertex *root, int level = 1) {
+        if (root == nullptr) {
+            return 0;
+        } else {
+            return (float) level + averageTreeHeight(root->ptrLeft, level + 1) +
+                   averageTreeHeight(root->ptrRight, level + 1);
+        }
+    }
+    int searchInTree(Vertex *root, int key) {
+        if (key == root->data) {
+            cout << root->data;
+            return 1;
+        }
+        if (root->ptrRight == nullptr && root->ptrLeft == nullptr) {
+            return 0;
+        }
+        if (key > root->data) {
+            cout << root->data << " ";
+            searchInTree(root->ptrRight, key);
+        } else if (key < root->data) {
+            cout << root->data << " ";
+            searchInTree(root->ptrLeft, key);
+        }
+        return 0;
+    }
+    void buildDoubleIndirection(Vertex *pVertex) {
+        for (auto &item : this->m_array) {
+            addDoubleIndirection(item, pVertex);
+        }
+    }
+    void buildRecursive(Vertex *pVertex) {
+        for (auto &item : this->m_array) {
+            addRecursive(item, &pVertex);
         }
     }
 };
 
 int main() {
-    random_device rd;
-    mt19937_64 mersenne;
-    uint64_t new_seed = time(NULL);
-    mersenne.seed(new_seed);
-    uniform_int_distribution<unsigned long long> dis;
-    Tree tree;
-    int tree_size;
-    cout << "input tree_size: ";
-    cin >> tree_size;
-    tree.FillVector(tree_size, dis, mersenne);
-    tree.CreateRandomSearchTreeDI();
-    cout << "LeftToRight: " << endl;
-    tree.PrintLeftToRight(tree.ReturnRoot());
-    cout << endl << "TopToBottom: " << endl;
-    tree.PrintTopBottom(tree.ReturnRoot());
+    // tree size
+    int treeSize = 0;
+    cout << "Enter tree size: ";
+    cin >> treeSize;
+    // first case
+    cout << endl
+         << "First case" << endl;
+    Tree tree1(treeSize);
+    Vertex *head1 = CreateVertex();
+    tree1.buildDoubleIndirection(head1);
+    // print tree
+    cout << "LeftToRight:" << endl;
+    tree1.printLeftToRight(head1);
     cout << endl;
-    Tree wood;
-    mersenne.seed(new_seed%12);
-    wood.FillVector(tree_size, dis ,mersenne);
-    wood.CreateRandomSearchTreeRecursive();
-    cout << "LeftToRight: " << endl;
-    tree.PrintLeftToRight(wood.ReturnRoot());
-    cout << endl << "TopToBottom: " << endl;
-    tree.PrintTopBottom(wood.ReturnRoot());
+    // second case
+    cout << endl
+         << "Second case" << endl;
+    Tree tree2(treeSize);
+    Vertex *head2 = CreateVertex();
+    tree2.buildRecursive(head2);
+    // print tree
+    cout << "LeftToRight:" << endl;
+    tree1.printLeftToRight(head2);
     cout << endl;
     return 0;
 }
