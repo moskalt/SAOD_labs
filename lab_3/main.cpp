@@ -23,10 +23,10 @@ private:
     vector<int> array;
     Vertex *ptr_root = nullptr;
 public:
-//    Tree() {
-//        Vertex *new_ptr = new Vertex;
-//        this->ptr_root = new_ptr;
-//    }
+    Tree() {
+        Vertex *new_ptr = new Vertex;
+        this->ptr_root = new_ptr;
+    }
 
     Vertex *CreateVertex() {
         Vertex *pVertex = new Vertex;
@@ -61,25 +61,10 @@ public:
 
     void FillVector(int tree_size, mt19937_64 mersenne) {
         for (int i = 0; i < tree_size; i++) {
-            this->array.push_back(mersenne() % 200 - 100);
+            this->array.push_back(mersenne() % 200 - 50);
         }
         //        sort(this->array.begin(), this->array.end());
     }
-
-    Vertex *TreeBuild(int size_left, int size_right) {
-        if (size_left > size_right)
-            return nullptr;
-        else {
-            int middle = (size_left + size_right) / 2;
-            Vertex *root = CreateVertex();
-            root->data = this->array[middle];
-            root->ptr_l_Vertex = TreeBuild(size_left, middle - 1);
-            root->ptr_r_Vertex = TreeBuild(middle + 1, size_right);
-            return root;
-        }
-    }
-
-    void GetRoot() { this->ptr_root = TreeBuild(0, this->array.size() - 1); }
 
     Vertex *ReturnRoot() { return this->ptr_root; }
 
@@ -148,14 +133,12 @@ public:
         if (*head_ptr == nullptr) {
             *head_ptr = CreateVertex();
             (*head_ptr)->data = key;
-            (*head_ptr)->ptr_r_Vertex = nullptr;
-            (*head_ptr)->ptr_l_Vertex = nullptr;
         }
     }
 
-    void CreateRandomSearchTreeDI(Vertex *root) {
+    void CreateRandomSearchTreeDI() {
         for (auto &item: this->array) {
-            DoubleIndirection(item, root);
+            DoubleIndirection(item, this->ptr_root);
         }
     }
 
@@ -188,13 +171,13 @@ int main() {
     int tree_size;
     cout << "input tree_size: ";
     cin >> tree_size;
-//    tree.FillVector(tree_size, mersenne);
-//    tree.CreateRandomSearchTreeDI(tree.ReturnRoot());
-//    cout << "LeftToRight: " << endl;
-//    tree.PrintLeftToRight(tree.ReturnRoot());
-//    cout << endl << "TopToBottom: " << endl;
-//    tree.PrintTopBottom(tree.ReturnRoot());
-//    cout << endl;
+    tree.FillVector(tree_size, mersenne);
+    tree.CreateRandomSearchTreeDI();
+    cout << "LeftToRight: " << endl;
+    tree.PrintLeftToRight(tree.ReturnRoot());
+    cout << endl << "TopToBottom: " << endl;
+    tree.PrintTopBottom(tree.ReturnRoot());
+    cout << endl;
     Tree wood;
     wood.FillVector(tree_size, mersenne);
     wood.CreateRandomSearchTreeRecursive();
