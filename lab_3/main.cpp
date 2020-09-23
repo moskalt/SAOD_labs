@@ -33,6 +33,8 @@ public:
 
     Vertex *CreateVertex() {
         Vertex *pVertex = new Vertex;
+        pVertex->ptr_l_Vertex = nullptr;
+        pVertex->ptr_r_Vertex = nullptr;
         return pVertex;
     }
 
@@ -62,7 +64,7 @@ public:
 
     void FillVector(int tree_size, mt19937_64 mersenne) {
         for (int i = 0; i < tree_size; i++) {
-            this->array.push_back(mersenne()% 200 - 100);
+            this->array.push_back(mersenne() % 200 - 100);
         }
         //        sort(this->array.begin(), this->array.end());
     }
@@ -153,28 +155,30 @@ public:
             (*head_ptr)->ptr_l_Vertex = nullptr;
         }
     }
-    void CreateRandomSearchTreeDI(Vertex *root){
-        for(auto &item: this->array){
+
+    void CreateRandomSearchTreeDI(Vertex *root) {
+        for (auto &item: this->array) {
             DoubleIndirection(item, root);
         }
     }
-    void AddRecursive(int key, Vertex* head){
-        if(head != nullptr) {
-            if (key > head->data) {
-                AddRecursive(key, head->ptr_r_Vertex);
-            }
-            if (key < head->data) {
-                AddRecursive(key, head->ptr_l_Vertex);
-            }
-        }else{
-            head = CreateVertex();
-            head->data = key;
-            head->ptr_l_Vertex = nullptr;
-            head->ptr_r_Vertex = nullptr;
+
+    void AddRecursive(int key, Vertex *temp ) {
+        if(temp == nullptr){
+            temp = CreateVertex();
+            temp->data = key;
+        }
+        else if(temp->data > key){
+            AddRecursive(key,temp->ptr_r_Vertex);
+        }
+        else if(temp->data < key){
+            AddRecursive(key, temp->ptr_l_Vertex);
+        }
+        else if(temp->data == key){
+            return;
         }
     }
-    void CreateRandomSearchTreeRecursive(Vertex* root){
-        for(auto &item: this->array){
+    void CreateRandomSearchTreeRecursive(Vertex *root) {
+        for (auto &item: this->array) {
             AddRecursive(item, root);
         }
     }
