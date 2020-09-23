@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <ctime>
 #include <iostream>
 #include <vector>
 #include <random>
@@ -22,10 +21,8 @@ private:
     };
 
     vector<int> array;
-
-public:
     Vertex *ptr_root = nullptr;
-
+public:
 //    Tree() {
 //        Vertex *new_ptr = new Vertex;
 //        this->ptr_root = new_ptr;
@@ -162,24 +159,24 @@ public:
         }
     }
 
-    void AddRecursive(int key, Vertex *temp ) {
-        if(temp == nullptr){
-            temp = CreateVertex();
-            temp->data = key;
+    void AddRecursive(int key, Vertex **temp ) {
+        if(*temp == nullptr){
+            *temp = CreateVertex();
+            (*temp)->data = key;
         }
-        else if(temp->data > key){
-            AddRecursive(key,temp->ptr_r_Vertex);
+        else if((*temp)->data > key){
+            AddRecursive(key,&(*temp)->ptr_l_Vertex);
         }
-        else if(temp->data < key){
-            AddRecursive(key, temp->ptr_l_Vertex);
+        else if((*temp)->data < key){
+            AddRecursive(key, &(*temp)->ptr_r_Vertex);
         }
-        else if(temp->data == key){
+        else if((*temp)->data == key){
             return;
         }
     }
-    void CreateRandomSearchTreeRecursive(Vertex *root) {
+    void CreateRandomSearchTreeRecursive() {
         for (auto &item: this->array) {
-            AddRecursive(item, root);
+            AddRecursive(item, &this->ptr_root);
         }
     }
 };
@@ -200,7 +197,7 @@ int main() {
 //    cout << endl;
     Tree wood;
     wood.FillVector(tree_size, mersenne);
-    wood.CreateRandomSearchTreeRecursive(wood.ReturnRoot());
+    wood.CreateRandomSearchTreeRecursive();
     cout << "LeftToRight: " << endl;
     tree.PrintLeftToRight(wood.ReturnRoot());
     cout << endl << "TopToBottom: " << endl;
