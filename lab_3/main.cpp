@@ -166,7 +166,7 @@ int main() {
     int treeSize = 0;
     cout << "Enter tree size: ";
     cin >> treeSize;
-    // first case
+    // ### first case ###
     cout << endl
          << "First case" << endl;
     Tree tree1(treeSize);
@@ -176,7 +176,7 @@ int main() {
     cout << "LeftToRight:" << endl;
     tree1.printLeftToRight(head1);
     cout << endl;
-    // second case
+    // ### second case ###
     cout << endl
          << "Second case" << endl;
     Tree tree2(treeSize);
