@@ -163,9 +163,10 @@ public:
 };
 
 int main() {
-    int treeSize = 3;
+    int treeSize;
     srand(time(nullptr));
     cout << "Enter tree size: ";
+    cin >> treeSize;
     cout << endl
          << "First case" << endl;
     Tree tree1(treeSize);
