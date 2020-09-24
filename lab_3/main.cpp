@@ -1,8 +1,7 @@
 #include <algorithm>
-#include <chrono>
+#include <ctime>
 #include <iostream>
 #include <vector>
-#include <ctime>
 
 using namespace std;
 
@@ -14,7 +13,6 @@ struct Vertex {
     Vertex() {
         ptrLeft = nullptr;
         ptrRight = nullptr;
-        data = 0;
     }
 };
 
@@ -30,8 +28,8 @@ private:
     int m_size = 0;
 
     void fillVector(int tree_size) {
-        for (int i = 0; i < tree_size - 1; i++) {
-            this->m_array.push_back(rand() % 200 - 100);
+        for (int i = 0; i < tree_size; i++) {
+            this->m_array.push_back(rand() % 400 - 100);
         }
     }
 
@@ -51,8 +49,8 @@ private:
             addRecursive(key, &(*head)->ptrLeft);
         } else if ((*head)->data < key) {
             addRecursive(key, &(*head)->ptrRight);
-        } else if ((*head)->data == key) {
-            //return;
+        } else {
+            cout << "Element is already in the array" << endl;
         }
     }
 
@@ -64,6 +62,7 @@ private:
             } else if (key > (*head_ptr)->data) {
                 head_ptr = &((*head_ptr)->ptrRight);
             } else {
+                cout << "Element is already in the array" << endl;
                 break;
             }
         }
@@ -170,7 +169,7 @@ public:
 
 int main() {
     int treeSize = 0;
-    srand(time(NULL));
+    srand(time(nullptr));
     cout << "Enter tree size: ";
     cin >> treeSize;
     cout << endl
@@ -182,11 +181,14 @@ int main() {
     tree1.printLeftToRight(head1);
     cout << endl;
     cout << "Tree size : " << tree1.treeSize(head1);
-    cout << endl << "Tree control sum: " << tree1.treeControlSum(head1);
-    cout << endl << "Max length:" << tree1.maxTreeHeight(head1);
-    cout << endl << "Average length: " << tree1.averageTreeHeight(head1) / float(tree1.treeSize(head1)) << endl;
-    cout << endl << "Second case" << endl;
-    srand(time(NULL));
+    cout << endl
+         << "Tree control sum: " << tree1.treeControlSum(head1);
+    cout << endl
+         << "Max length:" << tree1.maxTreeHeight(head1);
+    cout << endl
+         << "Average length: " << tree1.averageTreeHeight(head1) / float(tree1.treeSize(head1)) << endl;
+    cout << endl
+         << "Second case" << endl;
     Tree tree2(treeSize);
     Vertex *head2 = CreateVertex();
     tree2.buildRecursive(head2);
@@ -195,8 +197,11 @@ int main() {
     tree2.printLeftToRight(head2);
     cout << endl;
     cout << "Tree size : " << tree2.treeSize(head2);
-    cout << endl << "Tree control sum: " << tree2.treeControlSum(head2);
-    cout << endl << "Max length:" << tree2.maxTreeHeight(head2);
-    cout << endl << "Average length: " << tree2.averageTreeHeight(head2) / float(tree2.treeSize(head2)) << endl;
+    cout << endl
+         << "Tree control sum: " << tree2.treeControlSum(head2);
+    cout << endl
+         << "Max length:" << tree2.maxTreeHeight(head2);
+    cout << endl
+         << "Average length: " << tree2.averageTreeHeight(head2) / float(tree2.treeSize(head2)) << endl;
     return 0;
 }
