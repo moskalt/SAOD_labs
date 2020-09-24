@@ -1,8 +1,8 @@
 #include <algorithm>
 #include <chrono>
 #include <iostream>
-#include <random>
 #include <vector>
+#include <ctime>
 
 using namespace std;
 
@@ -10,24 +10,17 @@ struct Vertex {
     int data;
     Vertex *ptrRight;
     Vertex *ptrLeft;
+
     Vertex() {
         ptrLeft = nullptr;
         ptrRight = nullptr;
         data = 0;
     }
 };
+
 Vertex *CreateVertex() {
     auto *pVertex = new Vertex;
     return pVertex;
-}
-int GetRandomNumber(int rangeLeft, int rangeRight) {
-    if (rangeLeft >= rangeRight) {
-        return 0;
-    }
-    auto seed = chrono::high_resolution_clock::now().time_since_epoch().count();
-    default_random_engine randomGenerator(seed);
-    uniform_int_distribution<int> diceRoll(rangeLeft, rangeRight);
-    return diceRoll(randomGenerator);
 }
 
 class Tree {
@@ -35,11 +28,13 @@ class Tree {
 private:
     vector<int> m_array;
     int m_size = 0;
+
     void fillVector(int tree_size) {
-        for (int i = 0; i < tree_size; i++) {
-            this->m_array.push_back(GetRandomNumber(-100, 100));
+        for (int i = 0; i < tree_size - 1; i++) {
+            this->m_array.push_back(rand() % 200 - 100);
         }
     }
+
     void printVector() {
         cout << "Initial array" << endl;
         for (auto &i : m_array) {
@@ -47,6 +42,7 @@ private:
         }
         cout << endl;
     }
+
     static void addRecursive(int key, Vertex **head) {
         if (*head == nullptr) {
             *head = CreateVertex();
@@ -59,6 +55,7 @@ private:
             //return;
         }
     }
+
     static void addDoubleIndirection(int key, Vertex *root) {
         Vertex **head_ptr = &root;
         while (*head_ptr) {
@@ -82,6 +79,7 @@ public:
         fillVector(m_size);
         printVector();
     }
+
     void printLeftToRight(Vertex *root) {
         if (root != nullptr) {
             printLeftToRight(root->ptrLeft);
@@ -89,6 +87,7 @@ public:
             printLeftToRight(root->ptrRight);
         }
     }
+
     void printTopToBottom(Vertex *root) {
         if (root != nullptr) {
             cout << root->data << " ";
@@ -96,6 +95,7 @@ public:
             printTopToBottom(root->ptrRight);
         }
     }
+
     void printBottomToTop(Vertex *root) {
         if (root != nullptr) {
             printBottomToTop(root->ptrLeft);
@@ -103,6 +103,7 @@ public:
             cout << root->data << " ";
         }
     }
+
     int treeSize(Vertex *pVertex) {
         if (pVertex == nullptr)
             return 0;
@@ -110,6 +111,7 @@ public:
             return 1 + treeSize(pVertex->ptrLeft) +
                    treeSize(pVertex->ptrRight);
     }
+
     int treeControlSum(Vertex *root) {
         if (root == nullptr)
             return 0;
@@ -117,6 +119,7 @@ public:
             return root->data + treeControlSum(root->ptrLeft) +
                    treeControlSum(root->ptrRight);
     }
+
     int maxTreeHeight(Vertex *root) {
         if (root == nullptr) {
             return 0;
@@ -124,6 +127,7 @@ public:
             return 1 + max(maxTreeHeight(root->ptrLeft), maxTreeHeight(root->ptrRight));
         }
     }
+
     float averageTreeHeight(Vertex *root, int level = 1) {
         if (root == nullptr) {
             return 0;
@@ -132,6 +136,7 @@ public:
                    averageTreeHeight(root->ptrRight, level + 1);
         }
     }
+
     int searchInTree(Vertex *root, int key) {
         if (key == root->data) {
             cout << root->data;
@@ -149,11 +154,13 @@ public:
         }
         return 0;
     }
+
     void buildDoubleIndirection(Vertex *pVertex) {
         for (auto &item : this->m_array) {
             addDoubleIndirection(item, pVertex);
         }
     }
+
     void buildRecursive(Vertex *pVertex) {
         for (auto &item : this->m_array) {
             addRecursive(item, &pVertex);
@@ -162,29 +169,34 @@ public:
 };
 
 int main() {
-    // tree size
     int treeSize = 0;
+    srand(time(NULL));
     cout << "Enter tree size: ";
     cin >> treeSize;
-    // ### first case ###
     cout << endl
          << "First case" << endl;
     Tree tree1(treeSize);
     Vertex *head1 = CreateVertex();
     tree1.buildDoubleIndirection(head1);
-    // print tree
     cout << "LeftToRight:" << endl;
     tree1.printLeftToRight(head1);
     cout << endl;
-    // ### second case ###
-    cout << endl
-         << "Second case" << endl;
+    cout << "Tree size : " << tree1.treeSize(head1);
+    cout << endl << "Tree control sum: " << tree1.treeControlSum(head1);
+    cout << endl << "Max length:" << tree1.maxTreeHeight(head1);
+    cout << endl << "Average length: " << tree1.averageTreeHeight(head1) / float(tree1.treeSize(head1)) << endl;
+    cout << endl << "Second case" << endl;
+    srand(time(NULL));
     Tree tree2(treeSize);
     Vertex *head2 = CreateVertex();
     tree2.buildRecursive(head2);
     // print tree
     cout << "LeftToRight:" << endl;
-    tree1.printLeftToRight(head2);
+    tree2.printLeftToRight(head2);
     cout << endl;
+    cout << "Tree size : " << tree2.treeSize(head2);
+    cout << endl << "Tree control sum: " << tree2.treeControlSum(head2);
+    cout << endl << "Max length:" << tree2.maxTreeHeight(head2);
+    cout << endl << "Average length: " << tree2.averageTreeHeight(head2) / float(tree2.treeSize(head2)) << endl;
     return 0;
 }
