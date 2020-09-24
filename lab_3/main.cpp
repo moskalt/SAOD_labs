@@ -6,14 +6,9 @@
 using namespace std;
 
 struct Vertex {
-    int data;
-    Vertex *ptrRight;
-    Vertex *ptrLeft;
-
-    Vertex() {
-        ptrLeft = nullptr;
-        ptrRight = nullptr;
-    }
+    int data = 0;
+    Vertex *ptrRight = nullptr;
+    Vertex *ptrLeft = nullptr;
 };
 
 Vertex *CreateVertex() {
@@ -54,8 +49,8 @@ private:
         }
     }
 
-    static void addDoubleIndirection(int key, Vertex *root) {
-        Vertex **head_ptr = &root;
+    static void addDoubleIndirection(int key, Vertex **root) {
+        Vertex **head_ptr = root;
         while (*head_ptr) {
             if (key < (*head_ptr)->data) {
                 head_ptr = &((*head_ptr)->ptrLeft);
@@ -154,29 +149,28 @@ public:
         return 0;
     }
 
-    void buildDoubleIndirection(Vertex *pVertex) {
+    void buildDoubleIndirection(Vertex **pVertex) {
         for (auto &item : this->m_array) {
             addDoubleIndirection(item, pVertex);
         }
     }
 
-    void buildRecursive(Vertex *pVertex) {
+    void buildRecursive(Vertex **pVertex) {
         for (auto &item : this->m_array) {
-            addRecursive(item, &pVertex);
+            addRecursive(item, pVertex);
         }
     }
 };
 
 int main() {
-    int treeSize = 0;
+    int treeSize = 3;
     srand(time(nullptr));
     cout << "Enter tree size: ";
-    cin >> treeSize;
     cout << endl
          << "First case" << endl;
     Tree tree1(treeSize);
-    Vertex *head1 = CreateVertex();
-    tree1.buildDoubleIndirection(head1);
+    Vertex *head1 = nullptr;
+    tree1.buildDoubleIndirection(&head1);
     cout << "LeftToRight:" << endl;
     tree1.printLeftToRight(head1);
     cout << endl;
@@ -190,8 +184,8 @@ int main() {
     cout << endl
          << "Second case" << endl;
     Tree tree2(treeSize);
-    Vertex *head2 = CreateVertex();
-    tree2.buildRecursive(head2);
+    Vertex *head2 = nullptr;
+    tree2.buildRecursive(&head2);
     // print tree
     cout << "LeftToRight:" << endl;
     tree2.printLeftToRight(head2);
