@@ -89,8 +89,7 @@ public:
         if (pVertex == nullptr)
             return 0;
         else
-            return 1 + treeSize(pVertex->ptrLeft) +
-                   treeSize(pVertex->ptrRight);
+            return 1 + treeSize(pVertex->ptrLeft) + treeSize(pVertex->ptrRight);
     }
 
     int treeControlSum(Vertex *root) {
@@ -105,7 +104,8 @@ public:
         if (root == nullptr) {
             return 0;
         } else {
-            return 1 + max(maxTreeHeight(root->ptrLeft), maxTreeHeight(root->ptrRight));
+            return 1 +
+                   max(maxTreeHeight(root->ptrLeft), maxTreeHeight(root->ptrRight));
         }
     }
 
@@ -142,26 +142,26 @@ public:
         }
     }
 
-    void DeleteElement(int key, Vertex *root_ptr) {
-        Vertex *r, *s, *q;
+    static void DeleteElement(int key, Vertex *root_ptr) {
         Vertex **root = &root_ptr;
-        while (*root) {
-            if ((*root)->data < key)
+        Vertex *r=*root, *s=*root, *q= *root;
+        while (*root != nullptr) {
+            if ((*root)->data < key) {
                 root = &(*root)->ptrRight;
-            else if ((*root)->data > key)
+            } else if ((*root)->data > key) {
                 root = &(*root)->ptrLeft;
-            else {
+            } else {
                 cout << "error " << endl;
                 break;
             }
         }
-        if (*root) {
+        if (*root != nullptr) {
             q = *root;
-            if (q->ptrLeft == nullptr)
+            if (q->ptrLeft == nullptr) {
                 *root = q->ptrRight;
-            else if (q->ptrRight == nullptr)
+            } else if (q->ptrRight == nullptr) {
                 *root = q->ptrLeft;
-            else {
+            } else {
                 r = q->ptrLeft;
                 s = q;
             }
@@ -179,16 +179,15 @@ public:
 };
 
 int main() {
-    int treeSize;
-    //srand(time(nullptr));
-    cout << "Enter tree size: ";
-    //cin >> treeSize;
-    Tree tree1(15);
+    int treeSize=15;
+    // srand(time(nullptr));
+    Tree tree1(treeSize);
     Vertex *head1 = nullptr;
     tree1.buildDoubleIndirection(&head1);
     cout << "LeftToRight:" << endl;
     tree1.printLeftToRight(head1);
-    tree1.DeleteElement(178, head1);
+    Tree::DeleteElement(-51, head1);
+    cout << endl << "LeftToRight:" << endl;
     tree1.printLeftToRight(head1);
     return 0;
 }
