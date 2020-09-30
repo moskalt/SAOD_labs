@@ -143,8 +143,8 @@ public:
     }
 
     void DeleteElement(int key, Vertex *root_ptr) {
-        Vertex *r,*s,*q;
-        Vertex** root = &root_ptr;
+        Vertex *r, *s, *q;
+        Vertex **root = &root_ptr;
         while (*root) {
             if ((*root)->data < key)
                 root = &(*root)->ptrRight;
@@ -154,30 +154,28 @@ public:
                 cout << "error " << endl;
                 break;
             }
-            if(*root){
-                q = *root;
-                if(q->ptrLeft == nullptr)
-                    *root = q->ptrRight;
-                else if(q->ptrRight == nullptr)
-                    *root = q->ptrLeft;
-                else{
-                    r = q->ptrLeft;
-                    s = q;
-                }
-                while(r->ptrRight != nullptr){
-                    s = r;
-                    r = r->ptrRight;
-                }
-                s->ptrRight = r->ptrLeft;
-                r->ptrLeft = q->ptrRight;
-                r->ptrRight = q->ptrRight;
-                *root = r;
+        }
+        if (*root) {
+            q = *root;
+            if (q->ptrLeft == nullptr)
+                *root = q->ptrRight;
+            else if (q->ptrRight == nullptr)
+                *root = q->ptrLeft;
+            else {
+                r = q->ptrLeft;
+                s = q;
             }
-
+            while (r->ptrRight != nullptr) {
+                s = r;
+                r = r->ptrRight;
+            }
+            s->ptrRight = r->ptrLeft;
+            r->ptrLeft = q->ptrRight;
+            r->ptrRight = q->ptrRight;
+            *root = r;
         }
         delete q;
     }
-
 };
 
 int main() {
