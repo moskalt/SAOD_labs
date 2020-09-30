@@ -142,17 +142,55 @@ public:
         }
     }
 
+    void DeleteElement(int key, Vertex *root_ptr) {
+        Vertex *r,*s,*q;
+        Vertex** root = &root_ptr;
+        while (*root) {
+            if ((*root)->data < key)
+                root = &(*root)->ptrRight;
+            else if ((*root)->data > key)
+                root = &(*root)->ptrLeft;
+            else {
+                cout << "error " << endl;
+                break;
+            }
+            if(*root){
+                q = *root;
+                if(q->ptrLeft == nullptr)
+                    *root = q->ptrRight;
+                else if(q->ptrRight == nullptr)
+                    *root = q->ptrLeft;
+                else{
+                    r = q->ptrLeft;
+                    s = q;
+                }
+                while(r->ptrRight != nullptr){
+                    s = r;
+                    r = r->ptrRight;
+                }
+                s->ptrRight = r->ptrLeft;
+                r->ptrLeft = q->ptrRight;
+                r->ptrRight = q->ptrRight;
+                *root = r;
+            }
+
+        }
+        delete q;
+    }
+
 };
 
 int main() {
     int treeSize;
-    srand(time(nullptr));
+    //srand(time(nullptr));
     cout << "Enter tree size: ";
-    cin >> treeSize;
-    Tree tree1(treeSize);
+    //cin >> treeSize;
+    Tree tree1(15);
     Vertex *head1 = nullptr;
     tree1.buildDoubleIndirection(&head1);
     cout << "LeftToRight:" << endl;
+    tree1.printLeftToRight(head1);
+    tree1.DeleteElement(178, head1);
     tree1.printLeftToRight(head1);
     return 0;
 }
