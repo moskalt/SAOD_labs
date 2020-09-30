@@ -36,19 +36,6 @@ private:
         cout << endl;
     }
 
-    static void addRecursive(int key, Vertex **head) {
-        if (*head == nullptr) {
-            *head = CreateVertex();
-            (*head)->data = key;
-        } else if ((*head)->data > key) {
-            addRecursive(key, &(*head)->ptrLeft);
-        } else if ((*head)->data < key) {
-            addRecursive(key, &(*head)->ptrRight);
-        } else {
-            cout << "Element is already in the array" << endl;
-        }
-    }
-
     static void addDoubleIndirection(int key, Vertex **root) {
         Vertex **head_ptr = root;
         while (*head_ptr) {
@@ -155,11 +142,6 @@ public:
         }
     }
 
-    void buildRecursive(Vertex **pVertex) {
-        for (auto &item : this->m_array) {
-            addRecursive(item, pVertex);
-        }
-    }
 };
 
 int main() {
@@ -167,36 +149,10 @@ int main() {
     srand(time(nullptr));
     cout << "Enter tree size: ";
     cin >> treeSize;
-    cout << endl
-         << "First case" << endl;
     Tree tree1(treeSize);
     Vertex *head1 = nullptr;
     tree1.buildDoubleIndirection(&head1);
     cout << "LeftToRight:" << endl;
     tree1.printLeftToRight(head1);
-    cout << endl;
-    cout << "Tree size : " << tree1.treeSize(head1);
-    cout << endl
-         << "Tree control sum: " << tree1.treeControlSum(head1);
-    cout << endl
-         << "Max length:" << tree1.maxTreeHeight(head1);
-    cout << endl
-         << "Average length: " << tree1.averageTreeHeight(head1) / float(tree1.treeSize(head1)) << endl;
-    cout << endl
-         << "Second case" << endl;
-    Tree tree2(treeSize);
-    Vertex *head2 = nullptr;
-    tree2.buildRecursive(&head2);
-    // print tree
-    cout << "LeftToRight:" << endl;
-    tree2.printLeftToRight(head2);
-    cout << endl;
-    cout << "Tree size : " << tree2.treeSize(head2);
-    cout << endl
-         << "Tree control sum: " << tree2.treeControlSum(head2);
-    cout << endl
-         << "Max length:" << tree2.maxTreeHeight(head2);
-    cout << endl
-         << "Average length: " << tree2.averageTreeHeight(head2) / float(tree2.treeSize(head2)) << endl;
     return 0;
 }
