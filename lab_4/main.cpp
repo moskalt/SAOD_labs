@@ -144,7 +144,10 @@ public:
 
     static void DeleteElement(int key, Vertex *root_ptr) {
         Vertex **root = &root_ptr;
-        Vertex *r=*root, *s=*root, *q= *root;
+        Vertex *r, *s, *q;
+        r = CreateVertex();
+        s = CreateVertex();
+        q = CreateVertex();
         while (*root != nullptr) {
             if ((*root)->data < key) {
                 root = &(*root)->ptrRight;
@@ -164,29 +167,30 @@ public:
             } else {
                 r = q->ptrLeft;
                 s = q;
+
+                while (r->ptrRight != nullptr) {
+                    s = r;
+                    r = r->ptrRight;
+                }
+                s->ptrRight = r->ptrLeft;
+                r->ptrLeft = q->ptrRight;
+                r->ptrRight = q->ptrRight;
+                *root = r;
             }
-            while (r->ptrRight != nullptr) {
-                s = r;
-                r = r->ptrRight;
-            }
-            s->ptrRight = r->ptrLeft;
-            r->ptrLeft = q->ptrRight;
-            r->ptrRight = q->ptrRight;
-            *root = r;
+            delete q;
         }
-        delete q;
     }
 };
 
 int main() {
-    int treeSize=15;
+    int treeSize = 15;
     // srand(time(nullptr));
     Tree tree1(treeSize);
     Vertex *head1 = nullptr;
     tree1.buildDoubleIndirection(&head1);
     cout << "LeftToRight:" << endl;
     tree1.printLeftToRight(head1);
-    Tree::DeleteElement(-51, head1);
+    Tree::DeleteElement(178, head1);
     cout << endl << "LeftToRight:" << endl;
     tree1.printLeftToRight(head1);
     return 0;
