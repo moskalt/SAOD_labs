@@ -13,6 +13,8 @@ struct Vertex {
 
 Vertex *CreateVertex() {
     auto *pVertex = new Vertex;
+    pVertex->ptrRight = nullptr;
+    pVertex->ptrLeft = nullptr;
     return pVertex;
 }
 
@@ -21,11 +23,13 @@ class Tree {
 private:
     vector<int> m_array;
     int m_size = 0;
+
     void fillVector(int tree_size) {
         for (int i = 0; i < tree_size; i++) {
             this->m_array.push_back(rand() % 400 - 100);
         }
     }
+
     void printVector() {
         cout << "Initial array" << endl;
         for (auto &i : m_array) {
@@ -33,6 +37,7 @@ private:
         }
         cout << endl;
     }
+
     static void addDoubleIndirection(int key, Vertex **root) {
         Vertex **head_ptr = root;
         while (*head_ptr) {
@@ -52,11 +57,16 @@ private:
     }
 
 public:
+    int getRandomVectorElement() {
+        return m_array[rand() % this->m_size];
+    }
+
     explicit Tree(int size) {
         this->m_size = size;
         fillVector(m_size);
         printVector();
     }
+
     void printLeftToRight(Vertex *root) {
         if (root != nullptr) {
             printLeftToRight(root->ptrLeft);
@@ -64,6 +74,7 @@ public:
             printLeftToRight(root->ptrRight);
         }
     }
+
     void printTopToBottom(Vertex *root) {
         if (root != nullptr) {
             cout << root->data << " ";
@@ -71,6 +82,7 @@ public:
             printTopToBottom(root->ptrRight);
         }
     }
+
     void printBottomToTop(Vertex *root) {
         if (root != nullptr) {
             printBottomToTop(root->ptrLeft);
@@ -78,14 +90,16 @@ public:
             cout << root->data << " ";
         }
     }
+
     void buildDoubleIndirection(Vertex **pVertex) {
         for (auto &item : this->m_array) {
             addDoubleIndirection(item, pVertex);
         }
     }
-    static void DeleteElement(int key, Vertex *root) {
-        Vertex **ptrRoot = &root;
-        Vertex *temp1, *temp2, *temp3;
+
+    static void DeleteElement(int key, Vertex **root) {
+        Vertex **ptrRoot = root;
+        Vertex *r, *s, *q;
         while (*ptrRoot != nullptr) {
             if ((*ptrRoot)->data < key) {
                 ptrRoot = &(*ptrRoot)->ptrRight;
@@ -97,40 +111,47 @@ public:
             }
         }
         if (*ptrRoot != nullptr) {
-            temp3 = *ptrRoot;
-            if (temp3->ptrLeft == nullptr) {
-                *ptrRoot = temp3->ptrRight;
-            } else if (temp3->ptrRight == nullptr) {
-                *ptrRoot = temp3->ptrLeft;
+            q = *ptrRoot;
+            if (q->ptrLeft == nullptr) {
+                *ptrRoot = q->ptrRight;
+            } else if (q->ptrRight == nullptr) {
+                *ptrRoot = q->ptrLeft;
             } else {
-                temp1 = temp3->ptrLeft;
-                temp2 = temp3;
-                while (temp1->ptrRight != nullptr) {
-                    temp2 = temp1;
-                    temp1 = temp1->ptrRight;
+                r = q->ptrLeft;
+                s = q;
+                if (r->ptrRight == nullptr) {
+                    r->ptrRight = q->ptrRight;
+                    *ptrRoot = r;
+                } else {
+                    //searching right element in left subtree
+                    while (r->ptrRight != nullptr) {
+                        s = r;
+                        r = r->ptrRight;
+                    }
+                    s->ptrRight = r->ptrLeft;
+                    //replacing right element to deleted element
+                    r->ptrLeft = q->ptrLeft;
+                    r->ptrRight = q->ptrRight;
+                    *ptrRoot = r;
                 }
-                temp2->ptrRight = temp1->ptrLeft;
-                temp1->ptrLeft = temp3->ptrRight;
-                temp1->ptrRight = temp3->ptrRight;
-                *ptrRoot = temp1;
             }
-            delete temp3;
+            delete q;
         }
     }
 };
 
 int main() {
     int treeSize = 15;
-    // srand(time(nullptr));
+    //srand(time(nullptr));
     Tree tree1(treeSize);
     Vertex *head1 = nullptr;
     tree1.buildDoubleIndirection(&head1);
     cout << "LeftToRight:" << endl;
     tree1.printLeftToRight(head1);
-    int delElement = -42;
+    int delElement = -59;
     cout << endl
          << "Try to delete element: " << delElement << endl;
-    Tree::DeleteElement(delElement, head1);
+    Tree::DeleteElement(delElement, &head1);
     cout << "LeftToRight:" << endl;
     tree1.printLeftToRight(head1);
     return 0;
