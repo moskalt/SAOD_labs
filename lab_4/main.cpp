@@ -57,8 +57,12 @@ private:
     }
 
 public:
-    int getRandomVectorElement() {
+    int getVectorElement() {
         return m_array[rand() % this->m_size];
+    }
+
+    int getVectorElement(int index){
+        return m_array[index];
     }
 
     explicit Tree(int size) {
@@ -142,13 +146,13 @@ public:
 
 int main() {
     int treeSize = 15;
-    //srand(time(nullptr));
+    srand(time(nullptr));
     Tree tree1(treeSize);
     Vertex *head1 = nullptr;
     tree1.buildDoubleIndirection(&head1);
     cout << "LeftToRight:" << endl;
     tree1.printLeftToRight(head1);
-    int delElement = -59;
+    int delElement = tree1.getVectorElement(0);
     cout << endl
          << "Try to delete element: " << delElement << endl;
     Tree::DeleteElement(delElement, &head1);
