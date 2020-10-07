@@ -93,7 +93,52 @@ public:
     }
 
     void leftRightRotation(Vertex** root){
-
+        Vertex* q = (*root)->ptrLeft;
+        Vertex* r = q->ptrRight;
+        if(r->balance < 0)
+            (*root)->balance = 1;
+        else
+            (*root)->balance;
+        if(r->balance > 0)
+            q->balance = -1;
+        else
+            q->balance = 0;
+        r->balance = 0;
+        (*root)->ptrLeft = r->ptrRight;
+        q->ptrRight = r->ptrRight;
+        r->ptrLeft = q;
+        r->ptrRight = (*root);
+        (*root) = r;
+        increase = true;
     }
 
+    void rightRightRotation(Vertex** root){
+        Vertex* q = (*root)->ptrRight;
+        q->balance = 0;
+        (*root)->balance = 0;
+        (*root)->ptrRight = q->ptrLeft;
+        q->ptrLeft = (*root);
+        (*root) = q;
+        increase = false;
+    }
+
+    void rightLeftRotation(Vertex** root){
+        Vertex* q = (*root)->ptrRight;
+        Vertex* r = q->ptrLeft;
+        if(r->balance > 0)
+            (*root)->balance = -1;
+        else
+            (*root)->balance = 0;
+        if(r->balance < 0)
+            q->balance = 1;
+        else
+            q->balance = 0;
+        r->balance = 0;
+        (*root)->ptrRight = r->ptrLeft;
+        q->ptrLeft = r->ptrRight;
+        r->ptrLeft = (*root);
+        r->ptrRight - q;
+        (*root) = r;
+        increase = false;
+    }
 };
