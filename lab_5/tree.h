@@ -9,32 +9,23 @@ using namespace std;
 
 struct Vertex {
     int data = 0;
+    int balance = 0;
     Vertex *ptrRight = nullptr;
     Vertex *ptrLeft = nullptr;
-    int balance = 0;
 };
-
-Vertex *CreateVertex() {
-    auto *pVertex = new Vertex;
-    pVertex->ptrRight = nullptr;
-    pVertex->ptrLeft = nullptr;
-    return pVertex;
-}
-
 class Tree {
 
 private:
+    // members
     vector<int> m_array;
     int m_size = 0;
-
-    bool increase = true;
-
+    bool m_increase = true;
+    // methods
     void fillVector(int tree_size) {
         for (int i = 0; i < tree_size; i++) {
             this->m_array.push_back(rand() % 400 - 100);
         }
     }
-
     void printVector() {
         cout << "Initial array" << endl;
         for (auto &i : m_array) {
@@ -44,20 +35,12 @@ private:
     }
 
 public:
-    int getVectorElement() {
-        return m_array[rand() % this->m_size];
-    }
-
-    int getVectorElement(int index) {
-        return m_array[index];
-    }
-
     explicit Tree(int size) {
         this->m_size = size;
         fillVector(m_size);
         printVector();
     }
-
+    // print tree
     void printLeftToRight(Vertex *root) {
         if (root != nullptr) {
             printLeftToRight(root->ptrLeft);
@@ -65,7 +48,6 @@ public:
             printLeftToRight(root->ptrRight);
         }
     }
-
     void printTopToBottom(Vertex *root) {
         if (root != nullptr) {
             cout << root->data << " ";
@@ -73,7 +55,6 @@ public:
             printTopToBottom(root->ptrRight);
         }
     }
-
     void printBottomToTop(Vertex *root) {
         if (root != nullptr) {
             printBottomToTop(root->ptrLeft);
@@ -81,7 +62,7 @@ public:
             cout << root->data << " ";
         }
     }
-
+    // rotation
     void leftLeftRotation(Vertex **root) {
         Vertex *q = (*root)->ptrLeft;
         q->balance = 0;
@@ -89,9 +70,8 @@ public:
         (*root)->ptrLeft = q->ptrRight;
         q->ptrRight = *root;
         *root = q;
-        this->increase = false;
+        this->m_increase = false;
     }
-
     void leftRightRotation(Vertex** root){
         Vertex* q = (*root)->ptrLeft;
         Vertex* r = q->ptrRight;
@@ -109,9 +89,8 @@ public:
         r->ptrLeft = q;
         r->ptrRight = (*root);
         (*root) = r;
-        this->increase = true;
+        this->m_increase = true;
     }
-
     void rightRightRotation(Vertex** root){
         Vertex* q = (*root)->ptrRight;
         q->balance = 0;
@@ -119,9 +98,8 @@ public:
         (*root)->ptrRight = q->ptrLeft;
         q->ptrLeft = (*root);
         (*root) = q;
-        this->increase = false;
+        this->m_increase = false;
     }
-
     void rightLeftRotation(Vertex** root){
         Vertex* q = (*root)->ptrRight;
         Vertex* r = q->ptrLeft;
@@ -139,23 +117,23 @@ public:
         r->ptrLeft = (*root);
         r->ptrRight = q;
         (*root) = r;
-        this->increase = false;
+        this->m_increase = false;
     }
-
-    void AVLTree(Vertex **root, int key) {
+    // build
+    void buildAVL(Vertex **root, int key) {
         if (*root == nullptr) {
             (*root) = new Vertex;
             (*root)->data = key;
-            this->increase = true;
+            this->m_increase = true;
         } else if ((*root)->data > key) {
-            AVLTree(&((*root)->ptrLeft), key);
-            if (this->increase) {
+            buildAVL(&((*root)->ptrLeft), key);
+            if (this->m_increase) {
                 if ((*root)->balance > 0) {
                     (*root)->balance = 0;
-                    this->increase = false;
+                    this->m_increase = false;
                 } else if ((*root)->balance == 0) {
                     (*root)->balance = -1;
-                    this->increase = true;
+                    this->m_increase = true;
                 } else if ((*root)->ptrLeft->balance < 0) {
                     leftLeftRotation(root);
                 } else {
@@ -163,14 +141,14 @@ public:
                 }
             }
         } else if ((*root)->data < key) {
-            AVLTree(&((*root)->ptrRight), key);
-            if (this->increase) {
+            buildAVL(&((*root)->ptrRight), key);
+            if (this->m_increase) {
                 if ((*root)->balance < 0) {
                     (*root)->balance = 0;
-                    this->increase = false;
+                    this->m_increase = false;
                 } else if ((*root)->balance == 0) {
                     (*root)->balance = 1;
-                    this->increase = true;
+                    this->m_increase = true;
                 } else if ((*root)->ptrRight->balance > 0) {
                     rightRightRotation(root);
                 } else {
@@ -179,10 +157,9 @@ public:
             }
         }
     }
-
     void fillAVL(Vertex** root){
         for(auto &item:this->m_array){
-            AVLTree(root,item);
+            buildAVL(root, item);
         }
     }
 };
