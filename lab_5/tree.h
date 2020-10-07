@@ -89,7 +89,7 @@ public:
         (*root)->ptrLeft = q->ptrRight;
         q->ptrRight = *root;
         *root = q;
-        increase = false;
+        this->increase = false;
     }
 
     void leftRightRotation(Vertex** root){
@@ -98,18 +98,18 @@ public:
         if(r->balance < 0)
             (*root)->balance = 1;
         else
-            (*root)->balance;
+            (*root)->balance = 0;
         if(r->balance > 0)
             q->balance = -1;
         else
             q->balance = 0;
         r->balance = 0;
         (*root)->ptrLeft = r->ptrRight;
-        q->ptrRight = r->ptrRight;
+        q->ptrRight = r->ptrLeft;
         r->ptrLeft = q;
         r->ptrRight = (*root);
         (*root) = r;
-        increase = true;
+        this->increase = true;
     }
 
     void rightRightRotation(Vertex** root){
@@ -119,7 +119,7 @@ public:
         (*root)->ptrRight = q->ptrLeft;
         q->ptrLeft = (*root);
         (*root) = q;
-        increase = false;
+        this->increase = false;
     }
 
     void rightLeftRotation(Vertex** root){
@@ -137,25 +137,25 @@ public:
         (*root)->ptrRight = r->ptrLeft;
         q->ptrLeft = r->ptrRight;
         r->ptrLeft = (*root);
-        r->ptrRight - q;
+        r->ptrRight = q;
         (*root) = r;
-        increase = false;
+        this->increase = false;
     }
 
     void AVLTree(Vertex **root, int key) {
         if (*root == nullptr) {
             (*root) = new Vertex;
             (*root)->data = key;
-            increase = true;
+            this->increase = true;
         } else if ((*root)->data > key) {
             AVLTree(&((*root)->ptrLeft), key);
-            if (increase) {
+            if (this->increase) {
                 if ((*root)->balance > 0) {
                     (*root)->balance = 0;
-                    increase = false;
+                    this->increase = false;
                 } else if ((*root)->balance == 0) {
                     (*root)->balance = -1;
-                    increase = true;
+                    this->increase = true;
                 } else if ((*root)->ptrLeft->balance < 0) {
                     leftLeftRotation(root);
                 } else {
@@ -164,13 +164,13 @@ public:
             }
         } else if ((*root)->data < key) {
             AVLTree(&((*root)->ptrRight), key);
-            if (increase) {
+            if (this->increase) {
                 if ((*root)->balance < 0) {
                     (*root)->balance = 0;
-                    increase = false;
+                    this->increase = false;
                 } else if ((*root)->balance == 0) {
                     (*root)->balance = 1;
-                    increase = true;
+                    this->increase = true;
                 } else if ((*root)->ptrRight->balance > 0) {
                     rightRightRotation(root);
                 } else {

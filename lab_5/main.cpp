@@ -4,6 +4,7 @@
 int main() {
     using namespace std;
     int treeSize = 15;
+    //srand(time(nullptr));
     Tree tree1(treeSize);
     Vertex *head1 = nullptr;
     tree1.fillAVL(&head1);
