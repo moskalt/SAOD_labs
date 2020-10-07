@@ -141,43 +141,48 @@ public:
         (*root) = r;
         increase = false;
     }
-    void leftRightRotation(Vertex **root) {
-    }
-    void AVLTree(Vertex **head, int key) {
-        if (*head == nullptr) {
-            (*head) = new Vertex;
-            (*head)->data = key;
+
+    void AVLTree(Vertex **root, int key) {
+        if (*root == nullptr) {
+            (*root) = new Vertex;
+            (*root)->data = key;
             increase = true;
-        } else if ((*head)->data > key) {
-            AVLTree(&((*head)->ptrLeft), key);
+        } else if ((*root)->data > key) {
+            AVLTree(&((*root)->ptrLeft), key);
             if (increase) {
-                if ((*head)->balance > 0) {
-                    (*head)->balance = 0;
+                if ((*root)->balance > 0) {
+                    (*root)->balance = 0;
                     increase = false;
-                } else if ((*head)->balance == 0) {
-                    (*head)->balance = -1;
+                } else if ((*root)->balance == 0) {
+                    (*root)->balance = -1;
                     increase = true;
-                } else if ((*head)->ptrLeft->balance < 0) {
-                    leftLeftRotation(head);
+                } else if ((*root)->ptrLeft->balance < 0) {
+                    leftLeftRotation(root);
                 } else {
-                    leftRightRotation(head);
+                    leftRightRotation(root);
                 }
             }
-        } else if ((*head)->data < key) {
-            AVLTree(&((*head)->ptrRight), key);
+        } else if ((*root)->data < key) {
+            AVLTree(&((*root)->ptrRight), key);
             if (increase) {
-                if ((*head)->balance < 0) {
-                    (*head)->balance = 0;
+                if ((*root)->balance < 0) {
+                    (*root)->balance = 0;
                     increase = false;
-                } else if ((*head)->balance == 0) {
-                    (*head)->balance = 1;
+                } else if ((*root)->balance == 0) {
+                    (*root)->balance = 1;
                     increase = true;
-                } else if ((*head)->ptrRight->balance > 0) {
-                    rightRightRotation(head);
+                } else if ((*root)->ptrRight->balance > 0) {
+                    rightRightRotation(root);
                 } else {
-                    rightLeftRotation(head);
+                    rightLeftRotation(root);
                 }
             }
+        }
+    }
+
+    void fillAVL(Vertex** root){
+        for(auto &item:this->m_array){
+            AVLTree(root,item);
         }
     }
 };
