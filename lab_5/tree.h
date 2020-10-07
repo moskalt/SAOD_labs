@@ -1,0 +1,99 @@
+#pragma once
+
+#include <algorithm>
+#include <ctime>
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+struct Vertex {
+    int data = 0;
+    Vertex *ptrRight = nullptr;
+    Vertex *ptrLeft = nullptr;
+    int balance = 0;
+};
+
+Vertex *CreateVertex() {
+    auto *pVertex = new Vertex;
+    pVertex->ptrRight = nullptr;
+    pVertex->ptrLeft = nullptr;
+    return pVertex;
+}
+
+class Tree {
+
+private:
+    vector<int> m_array;
+    int m_size = 0;
+
+    bool increase = true;
+
+    void fillVector(int tree_size) {
+        for (int i = 0; i < tree_size; i++) {
+            this->m_array.push_back(rand() % 400 - 100);
+        }
+    }
+
+    void printVector() {
+        cout << "Initial array" << endl;
+        for (auto &i : m_array) {
+            cout << i << " ";
+        }
+        cout << endl;
+    }
+
+public:
+    int getVectorElement() {
+        return m_array[rand() % this->m_size];
+    }
+
+    int getVectorElement(int index){
+        return m_array[index];
+    }
+
+    explicit Tree(int size) {
+        this->m_size = size;
+        fillVector(m_size);
+        printVector();
+    }
+
+    void printLeftToRight(Vertex *root) {
+        if (root != nullptr) {
+            printLeftToRight(root->ptrLeft);
+            cout << root->data << " ";
+            printLeftToRight(root->ptrRight);
+        }
+    }
+
+    void printTopToBottom(Vertex *root) {
+        if (root != nullptr) {
+            cout << root->data << " ";
+            printTopToBottom(root->ptrLeft);
+            printTopToBottom(root->ptrRight);
+        }
+    }
+
+    void printBottomToTop(Vertex *root) {
+        if (root != nullptr) {
+            printBottomToTop(root->ptrLeft);
+            printBottomToTop(root->ptrRight);
+            cout << root->data << " ";
+        }
+    }
+
+    void leftLeftRotation(Vertex** root){
+        Vertex* q = (*root)->ptrLeft;
+        q->balance = 0;
+        (*root)->balance = 0;
+        (*root)->ptrLeft = q->ptrRight;
+        q->ptrRight = *root;
+        *root = q;
+        increase = false;
+    }
+
+    void leftRightRotation(Vertex** root){
+
+    }
+
+};
