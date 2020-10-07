@@ -48,7 +48,7 @@ public:
         return m_array[rand() % this->m_size];
     }
 
-    int getVectorElement(int index){
+    int getVectorElement(int index) {
         return m_array[index];
     }
 
@@ -82,8 +82,8 @@ public:
         }
     }
 
-    void leftLeftRotation(Vertex** root){
-        Vertex* q = (*root)->ptrLeft;
+    void leftLeftRotation(Vertex **root) {
+        Vertex *q = (*root)->ptrLeft;
         q->balance = 0;
         (*root)->balance = 0;
         (*root)->ptrLeft = q->ptrRight;
@@ -92,8 +92,43 @@ public:
         increase = false;
     }
 
-    void leftRightRotation(Vertex** root){
-
+    void leftRightRotation(Vertex **root) {
     }
-
+    void AVLTree(Vertex **head, int key) {
+        if (*head == nullptr) {
+            (*head) = new Vertex;
+            (*head)->data = key;
+            increase = true;
+        } else if ((*head)->data > key) {
+            AVLTree(&((*head)->ptrLeft), key);
+            if (increase) {
+                if ((*head)->balance > 0) {
+                    (*head)->balance = 0;
+                    increase = false;
+                } else if ((*head)->balance == 0) {
+                    (*head)->balance = -1;
+                    increase = true;
+                } else if ((*head)->ptrLeft->balance < 0) {
+                    leftLeftRotation(head);
+                } else {
+                    leftRightRotation(head);
+                }
+            }
+        } else if ((*head)->data < key) {
+            AVLTree(&((*head)->ptrRight), key);
+            if (increase) {
+                if ((*head)->balance < 0) {
+                    (*head)->balance = 0;
+                    increase = false;
+                } else if ((*head)->balance == 0) {
+                    (*head)->balance = 1;
+                    increase = true;
+                } else if ((*head)->ptrRight->balance > 0) {
+                    rightRightRotation(head);
+                } else {
+                    rightLeftRotation(head);
+                }
+            }
+        }
+    }
 };
