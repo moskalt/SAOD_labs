@@ -232,7 +232,6 @@ public:
             r = r->ptrLeft;
             m_decrease = true;
         }
-        delete r;
     }
     void deleteAVL(int key, Vertex *&head) {
         Vertex *q = nullptr;
