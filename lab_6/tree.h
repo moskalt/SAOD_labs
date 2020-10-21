@@ -1,5 +1,4 @@
 #pragma once
-
 #include <algorithm>
 #include <ctime>
 #include <iostream>
@@ -20,7 +19,7 @@ private:
     vector<int> m_array;
     int m_size = 0;
     bool m_increase = true;
-    bool m_decrease;
+    bool m_decrease = true;
     // methods
     void fillVector(int tree_size) {
         for (int i = 0; i < tree_size; i++) {
@@ -163,11 +162,9 @@ public:
             buildAVL(root, item);
         }
     }
-
-    void leftLeftRotationSpec(Vertex*& head)
-    {
-        Vertex* q;
-
+    // del
+    void leftLeftRotation1(Vertex *&head) {
+        Vertex *q;
         q = head->ptrLeft;
         if (q->balance == 0) {
             q->balance = 1;
@@ -181,12 +178,8 @@ public:
         q->ptrRight = head;
         head = q;
     }
-
-
-    void rightRightRotationSpec(Vertex*& head)
-    {
-        Vertex* q;
-
+    void rightRightRotation1(Vertex *&head) {
+        Vertex *q;
         q = head->ptrRight;
         if (q->balance == 0) {
             q->balance = -1;
@@ -200,9 +193,7 @@ public:
         q->ptrLeft = head;
         head = q;
     }
-
-    void BalanceRight(Vertex*& head)
-    {
+    void balanceRight(Vertex *&head) {
         if (head->balance == 1) {
             head->balance = 0;
         } else if (head->balance == 0) {
@@ -210,15 +201,13 @@ public:
             m_decrease = false;
         } else if (head->balance == -1) {
             if (head->ptrLeft->balance <= 0) {
-                leftLeftRotationSpec(head);
+                leftLeftRotation1(head);
             } else {
                 leftRightRotation(&head);
             }
         }
     }
-
-    void BalanceLeft(Vertex*& head)
-    {
+    void balanceLeft(Vertex *&head) {
         if (head->balance == -1) {
             head->balance = 0;
         } else if (head->balance == 0) {
@@ -226,19 +215,16 @@ public:
             m_decrease = false;
         } else if (head->balance == 1) {
             if (head->ptrRight->balance >= 0)
-                rightRightRotationSpec(head);
+                rightRightRotation1(head);
             else
                 rightLeftRotation(&head);
         }
     }
-
-
-    void DeleteTwoSubtrees(Vertex*& r, Vertex*& q)
-    {
+    void del(Vertex *&r, Vertex *&q) {
         if (r->ptrRight) {
-            DeleteTwoSubtrees(r->ptrRight, q);
+            del(r->ptrRight, q);
             if (m_decrease) {
-                BalanceRight(r);
+                balanceRight(r);
             }
         } else {
             q->data = r->data;
@@ -248,43 +234,43 @@ public:
         }
         delete r;
     }
-
-    void DeleteAVL(int key, Vertex*& head)
-    {
-        Vertex* q = nullptr;
+    void deleteAVL(int key, Vertex *&head) {
+        Vertex *q = nullptr;
         if (!head) {
-            // tree::decrease = false;
+            cout << endl
+                 << "Key doesn't exist in this tree" << endl;
+            m_decrease = false;
         } else {
             if (key < head->data) {
-                DeleteAVL(key, head->ptrLeft);
-                if (m_decrease == true) {
-                    BalanceLeft(head);
+                deleteAVL(key, head->ptrLeft);
+                if (m_decrease) {
+                    balanceLeft(head);
                 }
             } else {
                 if (key > head->data) {
-                    DeleteAVL(key, head->ptrRight);
-                    if (m_decrease == true) {
-                        BalanceRight(head);
+                    deleteAVL(key, head->ptrRight);
+                    if (m_decrease) {
+                        balanceRight(head);
                     }
                 } else {
                     q = head;
-                    if (q->ptrLeft == NULL) {
+                    if (q->ptrLeft == nullptr) {
                         head = q->ptrRight;
                         m_decrease = true;
                     } else {
-                        if (q->ptrRight == NULL) {
+                        if (q->ptrRight == nullptr) {
                             head = q->ptrLeft;
                             m_decrease = true;
                         } else {
-                            DeleteTwoSubtrees(q->ptrLeft, q);
-                            if (m_decrease == true) {
-                                BalanceLeft(head);
+                            del(q->ptrLeft, q);
+                            if (m_decrease) {
+                                balanceLeft(head);
                             }
                         }
                         delete q;
                     }
                 }
             }
-        }
-    }
-};
+        }// end of top else block
+    }    // end of deleteAVL
+};       // end of class
