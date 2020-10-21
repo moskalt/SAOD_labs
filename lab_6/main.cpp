@@ -16,5 +16,15 @@ int main() {
     cout << endl
          << "Top to bottom:" << endl;
     tree1.printTopToBottom(head1);
+
+    int key;
+    cout <<endl << "Input delete key" << endl;
+    cin >> key;
+    tree1.DeleteAVL(key, head1);
+    cout << "Left to right:" << endl;
+    tree1.printLeftToRight(head1);
+    cout << endl
+         << "Top to bottom:" << endl;
+    tree1.printTopToBottom(head1);
     return 0;
 }

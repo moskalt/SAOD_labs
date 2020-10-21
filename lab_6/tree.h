@@ -20,6 +20,7 @@ private:
     vector<int> m_array;
     int m_size = 0;
     bool m_increase = true;
+    bool m_decrease;
     // methods
     void fillVector(int tree_size) {
         for (int i = 0; i < tree_size; i++) {
@@ -160,6 +161,130 @@ public:
     void fillAVL(Vertex **root) {
         for (auto &item : this->m_array) {
             buildAVL(root, item);
+        }
+    }
+
+    void leftLeftRotationSpec(Vertex*& head)
+    {
+        Vertex* q;
+
+        q = head->ptrLeft;
+        if (q->balance == 0) {
+            q->balance = 1;
+            head->balance = -1;
+            m_decrease = false;
+        } else {
+            q->balance = 0;
+            head->balance = 0;
+        }
+        head->ptrLeft = q->ptrRight;
+        q->ptrRight = head;
+        head = q;
+    }
+
+
+    void rightRightRotationSpec(Vertex*& head)
+    {
+        Vertex* q;
+
+        q = head->ptrRight;
+        if (q->balance == 0) {
+            q->balance = -1;
+            head->balance = 1;
+            m_decrease = false;
+        } else {
+            q->balance = 0;
+            head->balance = 0;
+        }
+        head->ptrRight = q->ptrLeft;
+        q->ptrLeft = head;
+        head = q;
+    }
+
+    void BalanceRight(Vertex*& head)
+    {
+        if (head->balance == 1) {
+            head->balance = 0;
+        } else if (head->balance == 0) {
+            head->balance = -1;
+            m_decrease = false;
+        } else if (head->balance == -1) {
+            if (head->ptrLeft->balance <= 0) {
+                leftLeftRotationSpec(head);
+            } else {
+                leftRightRotation(&head);
+            }
+        }
+    }
+
+    void BalanceLeft(Vertex*& head)
+    {
+        if (head->balance == -1) {
+            head->balance = 0;
+        } else if (head->balance == 0) {
+            head->balance = 1;
+            m_decrease = false;
+        } else if (head->balance == 1) {
+            if (head->ptrRight->balance >= 0)
+                rightRightRotationSpec(head);
+            else
+                rightLeftRotation(&head);
+        }
+    }
+
+
+    void DeleteTwoSubtrees(Vertex*& r, Vertex*& q)
+    {
+        if (r->ptrRight) {
+            DeleteTwoSubtrees(r->ptrRight, q);
+            if (m_decrease) {
+                BalanceRight(r);
+            }
+        } else {
+            q->data = r->data;
+            q = r;
+            r = r->ptrLeft;
+            m_decrease = true;
+        }
+        delete r;
+    }
+
+    void DeleteAVL(int key, Vertex*& head)
+    {
+        Vertex* q = nullptr;
+        if (!head) {
+            // tree::decrease = false;
+        } else {
+            if (key < head->data) {
+                DeleteAVL(key, head->ptrLeft);
+                if (m_decrease == true) {
+                    BalanceLeft(head);
+                }
+            } else {
+                if (key > head->data) {
+                    DeleteAVL(key, head->ptrRight);
+                    if (m_decrease == true) {
+                        BalanceRight(head);
+                    }
+                } else {
+                    q = head;
+                    if (q->ptrLeft == NULL) {
+                        head = q->ptrRight;
+                        m_decrease = true;
+                    } else {
+                        if (q->ptrRight == NULL) {
+                            head = q->ptrLeft;
+                            m_decrease = true;
+                        } else {
+                            DeleteTwoSubtrees(q->ptrLeft, q);
+                            if (m_decrease == true) {
+                                BalanceLeft(head);
+                            }
+                        }
+                        delete q;
+                    }
+                }
+            }
         }
     }
 };
