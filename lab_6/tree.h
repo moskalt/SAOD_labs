@@ -23,7 +23,7 @@ private:
     // methods
     void fillVector(int tree_size) {
         for (int i = 0; i < tree_size; i++) {
-            this->m_array.push_back(rand() % 400 - 100);
+            this->m_array.push_back(rand() % 4000 - 1000);
         }
     }
     void printVector() {
@@ -39,6 +39,9 @@ public:
         this->m_size = size;
         fillVector(m_size);
         printVector();
+    }
+    vector<int> getVector() {
+        return m_array;
     }
     // print tree
     void printLeftToRight(Vertex *root) {
