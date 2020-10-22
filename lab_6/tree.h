@@ -238,7 +238,6 @@ public:
         if (!head) {
             cout << endl
                  << "Key doesn't exist in this tree" << endl;
-            m_decrease = false;
         } else {
             if (key < head->data) {
                 deleteAVL(key, head->ptrLeft);

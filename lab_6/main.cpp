@@ -4,7 +4,7 @@
 int main() {
     using namespace std;
     int treeSize = 15;
-    //    srand(time(nullptr));
+    srand(time(nullptr));
     // head
     Tree tree1(treeSize);
     Vertex *head1 = nullptr;
