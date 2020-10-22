@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <ctime>
 #include <iostream>
+#include <set>
 #include <vector>
 
 using namespace std;
@@ -16,14 +17,14 @@ class Tree {
 
 private:
     // members
-    vector<int> m_array;
+    set<int> m_array;
     int m_size = 0;
     bool m_increase = true;
     bool m_decrease = true;
     // methods
     void fillVector(int tree_size) {
-        for (int i = 0; i < tree_size; i++) {
-            this->m_array.push_back(rand() % 4000 - 1000);
+        while (m_array.size() < tree_size) {
+            this->m_array.insert(rand() % 10000 - 100);
         }
     }
     void printVector() {
@@ -40,7 +41,7 @@ public:
         fillVector(m_size);
         printVector();
     }
-    vector<int> getVector() {
+    set<int> getVector() {
         return m_array;
     }
     // print tree

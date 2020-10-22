@@ -1,11 +1,10 @@
 #include "tree.h"
 #include <algorithm>
 #include <iostream>
-#include <random>
 
 int main() {
     using namespace std;
-    int treeSize = 100;
+    int treeSize = 1000;
     srand(time(nullptr));
     // head
     Tree tree1(treeSize);
@@ -18,14 +17,11 @@ int main() {
     cout << endl;
     cout << "Top to bottom:" << endl;
     // shuffle vector
-    vector<int> originVector = tree1.getVector();
-    random_device rd;
-    mt19937 g(rd());
-    shuffle(originVector.begin(), originVector.end(), g);
+    set<int> originVector = tree1.getVector();
     // shuffle vector end
     tree1.printTopToBottom(head1);
-    for (int i = 0; i < 100; ++i) {
-        tree1.deleteAVL(originVector[0], head1);
+    for (int i = 0; i < 1000; ++i) {
+        tree1.deleteAVL(*originVector.begin(), head1);
         originVector.erase(originVector.begin());
         cout << endl;
         cout << "Left to right:" << endl;
