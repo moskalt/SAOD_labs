@@ -24,7 +24,7 @@ private:
     // methods
     void fillVector(int tree_size) {
         while (m_array.size() < tree_size) {
-            this->m_array.insert(rand() % 10000 - 100);
+            this->m_array.insert(rand() % 10000 - 5000);
         }
     }
     void printVector() {
