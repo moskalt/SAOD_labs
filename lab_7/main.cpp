@@ -9,5 +9,8 @@ int main() {
     tree.printLeftToRight(root);
     cout << endl;
     tree.printTopToBottom(root);
+    cout << endl;
+    cout << "Count of levels(DBD): ";
+    cout << tree.countLevels();
     return 0;
 }

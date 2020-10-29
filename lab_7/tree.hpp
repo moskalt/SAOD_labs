@@ -3,6 +3,7 @@
 #include <ctime>
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 using namespace std;
 
@@ -128,6 +129,12 @@ public:
         for(auto &item: this->m_array){
             b2insert(item,*root);
         }
+    }
+    int intlog(int x){
+        return (int)(log(x) / log(2));
+    }
+    int countLevels(){
+       return (intlog(this->m_size + 1) -1) / (intlog(2))  + 1;
     }
 
 
