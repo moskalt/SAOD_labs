@@ -1,9 +1,9 @@
 #pragma once
 #include <algorithm>
+#include <cmath>
 #include <ctime>
 #include <iostream>
 #include <vector>
-#include <cmath>
 
 using namespace std;
 
@@ -71,46 +71,41 @@ public:
         }
     }
 
-    void b2insert(int data, Vertex*& p){
-        if(p == nullptr){
+    void b2insert(int data, Vertex *&p) {
+        if (p == nullptr) {
             p = new Vertex;
             p->data = data;
             p->ptrLeft = p->ptrRight = nullptr;
             p->balance = 0;
             VR = true;
-        }
-        else if(p->data > data){
+        } else if (p->data > data) {
             b2insert(data, p->ptrLeft);
-            if(VR == true){
-                if(p->balance == 0){
-                    Vertex* q = p->ptrLeft;
+            if (VR == true) {
+                if (p->balance == 0) {
+                    Vertex *q = p->ptrLeft;
                     p->ptrLeft = q->ptrRight;
                     q->ptrRight = p;
                     p = q;
                     q->balance = 1;
                     VR = false;
                     HR = true;
-                }
-                else{
+                } else {
                     p->balance = 0;
                     VR = true;
                     HR = false;
                 }
-            }
-            else{
+            } else {
                 HR = false;
             }
-        }
-        else if(p->data < data){
+        } else if (p->data < data) {
             b2insert(data, p->ptrRight);
-            if(VR == true){
+            if (VR == true) {
                 p->balance = 1;
                 HR = true;
                 VR = false;
-            }
-            else if(HR == true){
-                if(p->balance == 1){
-                    Vertex* q=p->ptrRight;
+            } else if (HR == true) {
+                if (p->balance == 1) {
+                    Vertex *q = p->ptrRight;
                     p->balance = 0;
                     q->balance = 0;
                     p->ptrRight = q->ptrLeft;
@@ -118,24 +113,28 @@ public:
                     p = q;
                     VR = true;
                     HR = false;
-                }
-                else{
+                } else {
                     HR = false;
                 }
             }
         }
     }
-    void buildTree(Vertex **root){
-        for(auto &item: this->m_array){
-            b2insert(item,*root);
+    void buildTree(Vertex **root) {
+        for (auto &item : this->m_array) {
+            b2insert(item, *root);
         }
     }
-    int intlog(int x){
-        return (int)(log(x) / log(2));
+    static int binaryLog(int x) {
+        return (int) (log(x) / log(2));
     }
-    int countLevels(){
-       return (intlog(this->m_size + 1) -1) / (intlog(2))  + 1;
+    int countLevels() const {
+        return (binaryLog(this->m_size + 1) - 1) / (binaryLog(2)) + 1;
     }
-
-
+    int maxTreeHeight(Vertex *root) {
+        if (root == nullptr) {
+            return 0;
+        } else {
+            return 1 + max(maxTreeHeight(root->ptrLeft), maxTreeHeight(root->ptrRight));
+        }
+    }
 };// end of class
