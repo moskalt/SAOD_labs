@@ -15,6 +15,8 @@ struct Vertex {
 class Tree {
 
 private:
+    bool VR = true;
+    bool HR = true;
     // members
     vector<int> m_array;
     int m_size = 0;
@@ -67,10 +69,66 @@ public:
             cout << root->data << " ";
         }
     }
-    // build
-    void fillAVL(Vertex **root) {
-        for (auto &item : this->m_array) {
+
+    void b2insert(int data, Vertex*& p){
+        if(p == nullptr){
+            p = new Vertex;
+            p->data = data;
+            p->ptrLeft = p->ptrRight = nullptr;
+            p->balance = 0;
+            VR = true;
+        }
+        else if(p->data > data){
+            b2insert(data, p->ptrLeft);
+            if(VR == true){
+                if(p->balance == 0){
+                    Vertex* q = p->ptrLeft;
+                    p->ptrLeft = q->ptrRight;
+                    q->ptrRight = p;
+                    p = q;
+                    q->balance = 1;
+                    VR = false;
+                    HR = true;
+                }
+                else{
+                    p->balance = 0;
+                    VR = true;
+                    HR = false;
+                }
+            }
+            else{
+                HR = false;
+            }
+        }
+        else if(p->data < data){
+            b2insert(data, p->ptrRight);
+            if(VR == true){
+                p->balance = 1;
+                HR = true;
+                VR = false;
+            }
+            else if(HR == true){
+                if(p->balance == 1){
+                    Vertex* q=p->ptrRight;
+                    p->balance = 0;
+                    q->balance = 0;
+                    p->ptrRight = q->ptrLeft;
+                    q->ptrLeft = p;
+                    p = q;
+                    VR = true;
+                    HR = false;
+                }
+                else{
+                    HR = false;
+                }
+            }
         }
     }
+    void buildTree(Vertex **root){
+        for(auto &item: this->m_array){
+            b2insert(item,*root);
+        }
+    }
+
 
 };// end of class
