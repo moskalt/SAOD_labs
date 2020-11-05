@@ -9,9 +9,10 @@ using namespace std;
 
 struct Vertex {
     int data = 0;
+    int weight = 0;
+    int height = 0;
     Vertex *ptrRight = nullptr;
     Vertex *ptrLeft = nullptr;
-    int weight;
 };
 
 Vertex *CreateVertex() {
@@ -33,7 +34,7 @@ private:
 
     void fillVector(int tree_size) {
         for (int i = 0; i < tree_size; i++) {
-            this->m_array.push_back(rand() % 400 - 100);
+            this->m_array.push_back(i + 1);
         }
     }
     void printVector() {
@@ -50,12 +51,15 @@ private:
         }
         cout << endl;
     }
-    static void addDoubleIndirection(int key, Vertex **root) {
+    void addDoubleIndirection(int key, Vertex **root, int index) {
         Vertex **head_ptr = root;
+        int height = 1;
         while (*head_ptr) {
             if (key < (*head_ptr)->data) {
+                height++;
                 head_ptr = &((*head_ptr)->ptrLeft);
             } else if (key > (*head_ptr)->data) {
+                height++;
                 head_ptr = &((*head_ptr)->ptrRight);
             } else {
                 cout << "Element is already in the array" << endl;
@@ -65,6 +69,8 @@ private:
         if (*head_ptr == nullptr) {
             *head_ptr = CreateVertex();
             (*head_ptr)->data = key;
+            (*head_ptr)->weight = weights_array[index];
+            (*head_ptr)->height = height;
         }
     }
 
@@ -88,11 +94,6 @@ public:
             cout << root->data << " ";
             printTopToBottom(root->ptrLeft);
             printTopToBottom(root->ptrRight);
-        }
-    }
-    void buildDoubleIndirection(Vertex **pVertex) {
-        for (auto &item : this->m_array) {
-            addDoubleIndirection(item, pVertex);
         }
     }
     void createWeightsArray() {
@@ -147,8 +148,8 @@ public:
         }
     }
     void createAPAR_matrix() {
-        AP_matrix.resize(m_size + 1);// ??
-        AR_matrix.resize(m_size + 1);// ??
+        AP_matrix.resize(m_size + 1);
+        AR_matrix.resize(m_size + 1);
         for (auto &i : AP_matrix) {
             i.resize(m_size + 1);
         }
@@ -176,12 +177,28 @@ public:
             }
         }
     }
-    void createDop(size_t L, size_t R, Vertex** root){
-        if(L<R){
+    void createDop(size_t L, size_t R, Vertex **root) {
+        if (L < R) {
             int k = AR_matrix[L][R];
-            addDoubleIndirection(m_array[k - 1], root);
-            createDop(L, k-1, root);
-            createDop(k,R, root);
+            addDoubleIndirection(m_array[k - 1], root, k - 1);
+            createDop(L, k - 1, root);
+            createDop(k, R, root);
         }
+    }
+    int calcWeightHeight(Vertex *head) {
+        if (head) {
+            return head->weight * head->height + calcWeightHeight(head->ptrLeft) + calcWeightHeight(head->ptrRight);
+        }
+        return 0;
+    }
+    int calcWeightSum() {
+        int res = 0;
+        for (auto &i : weights_array) {
+            res += i;
+        }
+        return res;
+    }
+    float calcTheoretical() {
+        return (float) AP_matrix[0][m_size] / (float) AW_matrix[0][m_size];
     }
 };
