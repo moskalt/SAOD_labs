@@ -146,10 +146,16 @@ public:
         }
     }
     void createAPAR_matrix() {
-        AP_matrix.resize(m_size + 1); // ??
-        AR_matrix.resize(m_size + 1); // ??
+        AP_matrix.resize(m_size + 1);// ??
+        AR_matrix.resize(m_size + 1);// ??
+        for (auto &i : AP_matrix) {
+            i.resize(m_size + 1);
+        }
+        for (auto &i : AR_matrix) {
+            i.resize(m_size + 1);
+        }
         for (size_t i = 0; i < this->m_size; i++) {
-            AP_matrix[i][i + 1] = AW_matrix[i][i + 1]; // падает тут
+            AP_matrix[i][i + 1] = AW_matrix[i][i + 1];// падает тут
             AR_matrix[i][i + 1] = i + 1;
         }
         for (size_t h = 2; h <= this->m_size; h++) {
