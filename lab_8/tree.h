@@ -11,6 +11,7 @@ struct Vertex {
     int data = 0;
     Vertex *ptrRight = nullptr;
     Vertex *ptrLeft = nullptr;
+    int weight;
 };
 
 Vertex *CreateVertex() {
@@ -96,7 +97,7 @@ public:
     }
     void createWeightsArray() {
         for (size_t i = 0; i < m_size; i++) {
-            weights_array.push_back(rand() % 100 + 30);
+            weights_array.push_back(rand() % 100 + 2);
         }
     }
     void createAW_matrix() {
@@ -173,6 +174,14 @@ public:
                 AP_matrix[i][j] = min + AW_matrix[i][j];
                 AR_matrix[i][j] = m;
             }
+        }
+    }
+    void createDop(size_t L, size_t R, Vertex** root){
+        if(L<R){
+            int k = AR_matrix[L][R];
+            addDoubleIndirection(m_array[k], root);
+            createDop(L, k-1, root);
+            createDop(k,R, root);
         }
     }
 };
