@@ -44,6 +44,14 @@ private:
         cout << endl;
     }
 
+    void printWeightvector() {
+        cout << "Weight Vector" << endl;
+        for (auto &i:weights_array) {
+            cout << i << " ";
+        }
+        cout << endl;
+    }
+
     static void addDoubleIndirection(int key, Vertex **root) {
         Vertex **head_ptr = root;
         while (*head_ptr) {
@@ -76,6 +84,7 @@ public:
         fillVector(m_size);
         createWeigthsArray();
         printVector();
+        printWeightvector();
     }
 
     void printLeftToRight(Vertex *root) {
@@ -108,12 +117,34 @@ public:
         }
     }
 
-    void createWeigthsArray(){
-        for(size_t i = 0; i < m_size; i++){
-            weights_array.push_back(rand()%100 + 30);
+    void createWeigthsArray() {
+        for (size_t i = 0; i < m_size; i++) {
+            weights_array.push_back(rand() % 100 + 30);
         }
     }
-    void createAWmatrix(){
 
+    void createAWmatrix() {
+        AWmatrix.resize(m_size + 1);
+        for (size_t i = 0; i < AWmatrix.size(); i++) {
+            AWmatrix[i].resize(m_size + 1);
+        }
+        for (size_t i = 0; i < AWmatrix.size(); i++) {
+            for (size_t j = 0; j < AWmatrix.size(); j++) {
+                AWmatrix[i][j] = 0;
+            }
+        }
+        for (size_t i = 1; i < AWmatrix.size(); i++) {
+            AWmatrix[i - 1][i] = weights_array[i - 1];
+        }
+    }
+
+    void printAWmatrix() {
+        for (size_t i = 0; i < AWmatrix.size(); i++) {
+            cout << endl;
+            for (size_t j = 0; j < AWmatrix.size(); j++) {
+                cout.width(4);
+                cout << AWmatrix[i][j] << " ";
+            }
+        }
     }
 };
