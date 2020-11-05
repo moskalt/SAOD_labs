@@ -9,4 +9,7 @@ int main(){
     Tree tree(size);
     tree.createAWmatrix();
     tree.printAWmatrix();
+    tree.createAPARmatrix();
+    tree.printAPmatrix();
+    tree.printARmatrix();
 }

@@ -28,6 +28,8 @@ private:
     vector<int> m_array;
     vector<int> weights_array;
     vector<vector<int>> AWmatrix;
+    vector<vector<int>> APmatrix;
+    vector<vector<int>> ARmatrix;
     int m_size = 0;
 
     void fillVector(int tree_size) {
@@ -141,11 +143,56 @@ public:
     }
 
     void printAWmatrix() {
+        cout << endl;
         for (size_t i = 0; i < AWmatrix.size(); i++) {
             cout << endl;
             for (size_t j = 0; j < AWmatrix.size(); j++) {
                 cout.width(4);
                 cout << AWmatrix[i][j] << " ";
+            }
+        }
+    }
+    void printARmatrix(){
+        cout << endl;
+        for (size_t i = 0; i < AWmatrix.size(); i++) {
+            cout << endl;
+            for (size_t j = 0; j < AWmatrix.size(); j++) {
+                cout.width(4);
+                cout << ARmatrix[i][j] << " ";
+            }
+        }
+    }
+
+    void printAPmatrix(){
+        cout << endl;
+        for (size_t i = 0; i < AWmatrix.size(); i++) {
+            cout << endl;
+            for (size_t j = 0; j < AWmatrix.size(); j++) {
+                cout.width(4);
+                cout << APmatrix[i][j] << " ";
+            }
+        }
+    }
+
+    void createAPARmatrix(){
+        for(size_t i = 0; i < AWmatrix.size() -1 ; i++){
+            APmatrix[i][i+1] = AWmatrix[i][i+1];
+            ARmatrix[i][i+1] = i+1;
+        }
+        for(size_t h = 2; h < ARmatrix.size(); h++){
+            for(size_t i = 0; i < ARmatrix.size() - h; i++){
+                size_t j = i + h;
+                size_t m = ARmatrix[i][j-1];
+                int min = APmatrix[i][m-1] + APmatrix[m][j];
+                for(size_t k = m+1; k < ARmatrix[i+1][j]; k++){
+                    int x = APmatrix[i][k-1] + APmatrix[k][j];
+                    if(x < min){
+                        m = k;
+                        min = x;
+                    }
+                }
+                APmatrix[i][j] = min + AWmatrix[i][j];
+                ARmatrix[i][j] = m;
             }
         }
     }
