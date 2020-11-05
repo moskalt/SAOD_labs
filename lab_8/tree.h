@@ -101,23 +101,23 @@ public:
     }
     void createAW_matrix() {
         AW_matrix.resize(m_size + 1);
-        for (auto & i : AW_matrix) {
+        for (auto &i : AW_matrix) {
             i.resize(m_size + 1);
         }
-        for (auto & i : AW_matrix) {
+        for (auto &i : AW_matrix) {
             for (size_t j = 0; j < AW_matrix.size(); j++) {
                 i[j] = 0;
             }
         }
         for (size_t i = 0; i < AW_matrix.size(); i++) {
             for (size_t j = i + 1; j < AW_matrix.size(); j++) {
-                AW_matrix[i][j] = AW_matrix[i][j - 1] + weights_array[j - 1];
+                AW_matrix[i][j] = AW_matrix[i][j - 1] + weights_array[j - 1];// i ?
             }
         }
     }
     void printAW_matrix() {
         cout << endl;
-        for (auto & i : AW_matrix) {
+        for (auto &i : AW_matrix) {
             cout << endl;
             for (size_t j = 0; j < AW_matrix.size(); j++) {
                 cout.width(4);
@@ -146,12 +146,14 @@ public:
         }
     }
     void createAPAR_matrix() {
-        for (size_t i = 0; i < AW_matrix.size() - 1; i++) {
-            AP_matrix[i][i + 1] = AW_matrix[i][i + 1];
+        AP_matrix.resize(m_size + 1); // ??
+        AR_matrix.resize(m_size + 1); // ??
+        for (size_t i = 0; i < this->m_size; i++) {
+            AP_matrix[i][i + 1] = AW_matrix[i][i + 1]; // падает тут
             AR_matrix[i][i + 1] = i + 1;
         }
-        for (size_t h = 2; h <= AR_matrix.size(); h++) {
-            for (size_t i = 0; i < AR_matrix.size() - h; i++) {
+        for (size_t h = 2; h <= this->m_size; h++) {
+            for (size_t i = 0; i < this->m_size - h; i++) {
                 size_t j = i + h;
                 size_t m = AR_matrix[i][j - 1];
                 int min = AP_matrix[i][m - 1] + AP_matrix[m][j];
