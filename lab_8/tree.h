@@ -1,13 +1,11 @@
 #pragma once
 
-
 #include <algorithm>
 #include <ctime>
 #include <iostream>
 #include <vector>
 
 using namespace std;
-
 
 struct Vertex {
     int data = 0;
@@ -27,9 +25,9 @@ class Tree {
 private:
     vector<int> m_array;
     vector<int> weights_array;
-    vector<vector<int>> AWmatrix;
-    vector<vector<int>> APmatrix;
-    vector<vector<int>> ARmatrix;
+    vector<vector<int>> AW_matrix;
+    vector<vector<int>> AP_matrix;
+    vector<vector<int>> AR_matrix;
     int m_size = 0;
 
     void fillVector(int tree_size) {
@@ -37,7 +35,6 @@ private:
             this->m_array.push_back(rand() % 400 - 100);
         }
     }
-
     void printVector() {
         cout << "Initial array" << endl;
         for (auto &i : m_array) {
@@ -45,15 +42,13 @@ private:
         }
         cout << endl;
     }
-
-    void printWeightvector() {
+    void printWeightVector() {
         cout << "Weight Vector" << endl;
-        for (auto &i:weights_array) {
+        for (auto &i : weights_array) {
             cout << i << " ";
         }
         cout << endl;
     }
-
     static void addDoubleIndirection(int key, Vertex **root) {
         Vertex **head_ptr = root;
         while (*head_ptr) {
@@ -73,22 +68,13 @@ private:
     }
 
 public:
-    int getVectorElement() {
-        return m_array[rand() % this->m_size];
-    }
-
-    int getVectorElement(int index) {
-        return m_array[index];
-    }
-
     explicit Tree(int size) {
         this->m_size = size;
         fillVector(m_size);
-        createWeigthsArray();
+        createWeightsArray();
         printVector();
-        printWeightvector();
+        printWeightVector();
     }
-
     void printLeftToRight(Vertex *root) {
         if (root != nullptr) {
             printLeftToRight(root->ptrLeft);
@@ -96,7 +82,6 @@ public:
             printLeftToRight(root->ptrRight);
         }
     }
-
     void printTopToBottom(Vertex *root) {
         if (root != nullptr) {
             cout << root->data << " ";
@@ -104,97 +89,82 @@ public:
             printTopToBottom(root->ptrRight);
         }
     }
-
-    void printBottomToTop(Vertex *root) {
-        if (root != nullptr) {
-            printBottomToTop(root->ptrLeft);
-            printBottomToTop(root->ptrRight);
-            cout << root->data << " ";
-        }
-    }
-
     void buildDoubleIndirection(Vertex **pVertex) {
         for (auto &item : this->m_array) {
             addDoubleIndirection(item, pVertex);
         }
     }
-
-    void createWeigthsArray() {
+    void createWeightsArray() {
         for (size_t i = 0; i < m_size; i++) {
             weights_array.push_back(rand() % 100 + 30);
         }
     }
-
-    void createAWmatrix() {
-        AWmatrix.resize(m_size + 1);
-        for (size_t i = 0; i < AWmatrix.size(); i++) {
-            AWmatrix[i].resize(m_size + 1);
+    void createAW_matrix() {
+        AW_matrix.resize(m_size + 1);
+        for (auto & i : AW_matrix) {
+            i.resize(m_size + 1);
         }
-        for (size_t i = 0; i < AWmatrix.size(); i++) {
-            for (size_t j = 0; j < AWmatrix.size(); j++) {
-                AWmatrix[i][j] = 0;
+        for (auto & i : AW_matrix) {
+            for (size_t j = 0; j < AW_matrix.size(); j++) {
+                i[j] = 0;
             }
         }
-        for (size_t i = 0; i < AWmatrix.size(); i++) {
-            for (size_t j = i +1; j < AWmatrix.size(); j++) {
-                AWmatrix[i][j] = AWmatrix[i][j -1 ] + weights_array[j - 1];
+        for (size_t i = 0; i < AW_matrix.size(); i++) {
+            for (size_t j = i + 1; j < AW_matrix.size(); j++) {
+                AW_matrix[i][j] = AW_matrix[i][j - 1] + weights_array[j - 1];
             }
         }
     }
-
-    void printAWmatrix() {
+    void printAW_matrix() {
         cout << endl;
-        for (size_t i = 0; i < AWmatrix.size(); i++) {
+        for (auto & i : AW_matrix) {
             cout << endl;
-            for (size_t j = 0; j < AWmatrix.size(); j++) {
+            for (size_t j = 0; j < AW_matrix.size(); j++) {
                 cout.width(4);
-                cout << AWmatrix[i][j] << " ";
+                cout << i[j] << " ";
             }
         }
     }
-    void printARmatrix(){
+    void printAR_matrix() {
         cout << endl;
-        for (size_t i = 0; i < AWmatrix.size(); i++) {
+        for (size_t i = 0; i < AW_matrix.size(); i++) {
             cout << endl;
-            for (size_t j = 0; j < AWmatrix.size(); j++) {
+            for (size_t j = 0; j < AW_matrix.size(); j++) {
                 cout.width(4);
-                cout << ARmatrix[i][j] << " ";
+                cout << AR_matrix[i][j] << " ";
             }
         }
     }
-
-    void printAPmatrix(){
+    void printAP_matrix() {
         cout << endl;
-        for (size_t i = 0; i < AWmatrix.size(); i++) {
+        for (size_t i = 0; i < AW_matrix.size(); i++) {
             cout << endl;
-            for (size_t j = 0; j < AWmatrix.size(); j++) {
+            for (size_t j = 0; j < AW_matrix.size(); j++) {
                 cout.width(4);
-                cout << APmatrix[i][j] << " ";
+                cout << AP_matrix[i][j] << " ";
             }
         }
     }
-
-    void createAPARmatrix(){
-        for(size_t i = 0; i < AWmatrix.size() -1 ; i++){
-            APmatrix[i][i+1] = AWmatrix[i][i+1];
-            ARmatrix[i][i+1] = i+1;
+    void createAPAR_matrix() {
+        for (size_t i = 0; i < AW_matrix.size() - 1; i++) {
+            AP_matrix[i][i + 1] = AW_matrix[i][i + 1];
+            AR_matrix[i][i + 1] = i + 1;
         }
-        for(size_t h = 2; h < ARmatrix.size(); h++){
-            for(size_t i = 0; i < ARmatrix.size() - h; i++){
+        for (size_t h = 2; h <= AR_matrix.size(); h++) {
+            for (size_t i = 0; i < AR_matrix.size() - h; i++) {
                 size_t j = i + h;
-                size_t m = ARmatrix[i][j-1];
-                int min = APmatrix[i][m-1] + APmatrix[m][j];
-                for(size_t k = m+1; k < ARmatrix[i+1][j]; k++){
-                    int x = APmatrix[i][k-1] + APmatrix[k][j];
-                    if(x < min){
+                size_t m = AR_matrix[i][j - 1];
+                int min = AP_matrix[i][m - 1] + AP_matrix[m][j];
+                for (size_t k = m + 1; k <= AR_matrix[i + 1][j]; k++) {
+                    int x = AP_matrix[i][k - 1] + AP_matrix[k][j];
+                    if (x < min) {
                         m = k;
                         min = x;
                     }
                 }
-                APmatrix[i][j] = min + AWmatrix[i][j];
-                ARmatrix[i][j] = m;
+                AP_matrix[i][j] = min + AW_matrix[i][j];
+                AR_matrix[i][j] = m;
             }
         }
     }
-
 };
