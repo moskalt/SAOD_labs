@@ -156,7 +156,7 @@ public:
             i.resize(m_size + 1);
         }
         for (size_t i = 0; i < this->m_size; i++) {
-            AP_matrix[i][i + 1] = AW_matrix[i][i + 1];// падает тут
+            AP_matrix[i][i + 1] = AW_matrix[i][i + 1];
             AR_matrix[i][i + 1] = i + 1;
         }
         for (size_t h = 2; h <= this->m_size; h++) {
@@ -179,7 +179,7 @@ public:
     void createDop(size_t L, size_t R, Vertex** root){
         if(L<R){
             int k = AR_matrix[L][R];
-            addDoubleIndirection(m_array[k], root);
+            addDoubleIndirection(m_array[k - 1], root);
             createDop(L, k-1, root);
             createDop(k,R, root);
         }
