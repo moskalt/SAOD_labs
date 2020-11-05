@@ -159,7 +159,7 @@ public:
             AR_matrix[i][i + 1] = i + 1;
         }
         for (size_t h = 2; h <= this->m_size; h++) {
-            for (size_t i = 0; i < this->m_size - h; i++) {
+            for (size_t i = 0; i <= this->m_size - h; i++) {
                 size_t j = i + h;
                 size_t m = AR_matrix[i][j - 1];
                 int min = AP_matrix[i][m - 1] + AP_matrix[m][j];
