@@ -1,9 +1,11 @@
 #include "tree.h"
 #include <iostream>
+#include <ctime>
 
 int main() {
     cout << "Input tree size: ";
     int size;
+    srand(time(nullptr));
     cin >> size;
     cout << endl;
     Tree tree(size);
