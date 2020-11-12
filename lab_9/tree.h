@@ -1,7 +1,3 @@
-//
-// Created by moskalt on 11/11/20.
-//
-
 #ifndef LAB_9_TREE_H
 #define LAB_9_TREE_H
 
@@ -31,13 +27,11 @@ private:
     vector<int> m_array;
     vector<int> weights_array;
     int m_size = 0;
-
     void fillVector(int tree_size) {
         for (int i = 0; i < tree_size; i++) {
             this->m_array.push_back(rand() % 500 - 250);
         }
     }
-
     void printVector() {
         cout << "Initial array" << endl;
         for (auto &i : m_array) {
@@ -45,7 +39,6 @@ private:
         }
         cout << endl;
     }
-
     void printWeightVector() {
         cout << "Weight Vector" << endl;
         for (auto &i : weights_array) {
@@ -53,8 +46,7 @@ private:
         }
         cout << endl;
     }
-
-    void addDoubleIndirection(int key, Vertex **root) {
+    static void addDoubleIndirection(int key, Vertex **root) {
         Vertex **head_ptr = root;
         while (*head_ptr) {
             if (key < (*head_ptr)->data) {
@@ -80,7 +72,6 @@ public:
         printVector();
         printWeightVector();
     }
-
     void printLeftToRight(Vertex *root) {
         if (root != nullptr) {
             printLeftToRight(root->ptrLeft);
@@ -88,7 +79,6 @@ public:
             printLeftToRight(root->ptrRight);
         }
     }
-
     void printTopToBottom(Vertex *root) {
         if (root != nullptr) {
             cout << root->data << " ";
@@ -96,18 +86,15 @@ public:
             printTopToBottom(root->ptrRight);
         }
     }
-
     void createWeightsArray() {
         for (size_t i = 0; i < m_size; i++) {
             weights_array.push_back(rand() % 100 + 2);
         }
     }
-
     void QuickSortRev(int L, int R) {
         int i = L;
         int j = R;
         int temp = weights_array[(i + j) / 2];
-
         while (i <= j) {
             while (weights_array[i] > temp) {
                 i++;
@@ -128,14 +115,11 @@ public:
         if (i < R) {
             QuickSortRev(i, R);
         }
-        return;
     }
-
     void QuickSort(int L, int R) {
         int i = L;
         int j = R;
         int temp = weights_array[(i + j) / 2];
-
         while (i <= j) {
             while (weights_array[i] < temp) {
                 i++;
@@ -156,26 +140,21 @@ public:
         if (i < R) {
             QuickSort(i, R);
         }
-        return;
     }
-
     void buildTreeA1(Vertex **root) {
         //sort weights
-        QuickSortRev(0, m_array.size() - 1);
+        QuickSortRev(0, (int) m_array.size() - 1);
         printVector();
         printWeightVector();
-        for (size_t i = 0; i < m_array.size(); i++) {
-            addDoubleIndirection(m_array[i], root);
+        for (int &i : m_array) {
+            addDoubleIndirection(i, root);
         }
-        return;
     }
-
-    void sortArrays(){
-        QuickSort(0, m_size-1);
+    void sortArrays() {
+        QuickSort(0, m_size - 1);
         printVector();
         printWeightVector();
     }
-
     void buildTreeA2(Vertex **root, int L, int R) {
         int weight = 0;
         int sum = 0;
@@ -200,4 +179,4 @@ public:
 };
 
 
-#endif //LAB_9_TREE_H
+#endif//LAB_9_TREE_H
