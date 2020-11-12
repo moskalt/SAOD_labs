@@ -20,7 +20,7 @@ int main() {
     Tree tree2(size);
     Vertex* root2 = nullptr;
     tree2.sortArrays();
-    tree.buildTreeA2(&root2, 0, size-1);
+    tree2.buildTreeA2(&root2, 0, size-1);
     cout << "Top to Bottom : " ;
     tree2.printTopToBottom(root2);
     cout << endl << "Left to Right : ";
