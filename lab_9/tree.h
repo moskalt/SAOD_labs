@@ -116,31 +116,6 @@ public:
             QuickSortRev(i, R);
         }
     }
-    void QuickSort(int L, int R) {
-        int i = L;
-        int j = R;
-        int temp = weights_array[(i + j) / 2];
-        while (i <= j) {
-            while (weights_array[i] < temp) {
-                i++;
-            }
-            while (weights_array[j] > temp) {
-                j--;
-            }
-            if (i <= j) {
-                swap(weights_array[i], weights_array[j]);
-                swap(m_array[i], m_array[j]);
-                i++;
-                j--;
-            }
-        }
-        if (L < j) {
-            QuickSort(L, j);
-        }
-        if (i < R) {
-            QuickSort(i, R);
-        }
-    }
     void buildTreeA1(Vertex **root) {
         //sort weights
         QuickSortRev(0, (int) m_array.size() - 1);
@@ -151,10 +126,36 @@ public:
         }
     }
     void sortArrays() {
-        QuickSort(0, m_size - 1);
+        QuickSortVertex(0, m_size - 1);
         printVector();
         printWeightVector();
     }
+    void QuickSortVertex(int L, int R) {
+        int i = L;
+        int j = R;
+        int temp = m_array[(i + j) / 2];
+        while (i <= j) {
+            while (m_array[i] < temp) {
+                i++;
+            }
+            while (m_array[j] > temp) {
+                j--;
+            }
+            if (i <= j) {
+                swap(weights_array[i], weights_array[j]);
+                swap(m_array[i], m_array[j]);
+                i++;
+                j--;
+            }
+        }
+        if (L < j) {
+            QuickSortVertex(L, j);
+        }
+        if (i < R) {
+            QuickSortVertex(i, R);
+        }
+    }
+
     void buildTreeA2(Vertex **root, int L, int R) {
         int weight = 0;
         int sum = 0;
