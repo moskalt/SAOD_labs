@@ -29,7 +29,14 @@ private:
     int m_size = 0;
     void fillVector(int tree_size) {
         for (int i = 0; i < tree_size; i++) {
-            this->m_array.push_back(rand() % 500 - 250);
+            this->m_array.push_back(rand() % 700 - 350);
+        }
+        auto ptr = unique(m_array.begin(), m_array.end());
+        m_array.erase(ptr, m_array.end());
+        while (m_array.size() < tree_size) {
+            this->m_array.push_back(rand() % 700 - 350);
+            auto newPtr = unique(m_array.begin(), m_array.end());
+            m_array.erase(newPtr, m_array.end());
         }
     }
     void printVector() {
@@ -155,7 +162,6 @@ public:
             QuickSortVertex(i, R);
         }
     }
-
     void buildTreeA2(Vertex **root, int L, int R) {
         int weight = 0;
         int sum = 0;
