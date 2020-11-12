@@ -26,17 +26,11 @@ class Tree {
 private:
     vector<int> m_array;
     vector<int> weights_array;
+    vector<int> index_array;
     int m_size = 0;
     void fillVector(int tree_size) {
         for (int i = 0; i < tree_size; i++) {
-            this->m_array.push_back(rand() % 700 - 350);
-        }
-        auto ptr = unique(m_array.begin(), m_array.end());
-        m_array.erase(ptr, m_array.end());
-        while (m_array.size() < tree_size) {
-            this->m_array.push_back(rand() % 700 - 350);
-            auto newPtr = unique(m_array.begin(), m_array.end());
-            m_array.erase(newPtr, m_array.end());
+            this->m_array.push_back(rand() % 2000 - 1000);
         }
     }
     void printVector() {
@@ -162,20 +156,23 @@ public:
             QuickSortVertex(i, R);
         }
     }
+
+    void createIndexArray(){
+        index_array.push_back(0);
+        for(size_t i = 1; i <= weights_array.size(); i++){
+            index_array.push_back(weights_array[i-1] + index_array[i-1]);
+        }
+    }
+
     void buildTreeA2(Vertex **root, int L, int R) {
-        int weight = 0;
-        int sum = 0;
+        int weight;
         int temp_index;
         if (L <= R) {
-            for (int i = L; i <= R; i++) {
-                weight += weights_array[i];
-            }
-            for (int i = L; i <= R; i++) {
-                temp_index = i;
-                if (sum < weight / 2 && (sum + weights_array[i]) > weight / 2) {
+            weight = index_array[R+1] - index_array[L];
+            for (temp_index = L; temp_index <= R; temp_index++) {
+                if ((index_array[temp_index] - index_array[L] ) < weight / 2 && ((index_array[temp_index] - index_array[L] ) + weights_array[temp_index]) > weight / 2) {
                     break;
                 }
-                sum += weights_array[i];
             }
             addDoubleIndirection(m_array[temp_index], root);
             buildTreeA2(root, L, temp_index - 1);
