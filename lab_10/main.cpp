@@ -77,6 +77,9 @@ int main() {
 		std::cout << i << " - ";
 		std::cout.width(0);
 		for (size_t j = 0; j < size; j++) {
+			if (j % 4 == 0) {
+				std::cout << " ";
+			}
 			std::cout << FixedCodeArray[i][j];
 		}
 		std::cout << std::endl;
