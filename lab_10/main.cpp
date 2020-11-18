@@ -19,6 +19,7 @@ unsigned short int* fromIntToBitArray(int num, size_t size) {
 }
 
 int getExp() {
+	//bit_size количество бит в введенном числе(для первого кода 16, перепишешь функцию когда будешь свои писать
 	return log(bit_size) / log(2);
 }
 
