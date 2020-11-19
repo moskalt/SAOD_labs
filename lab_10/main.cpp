@@ -76,13 +76,58 @@ std::vector<unsigned short int> getEliasYArray(std::vector<unsigned short int> b
     return codeLength;
 }
 
+std::vector<unsigned short int> getEliasWArray(std::vector<unsigned short int> bitArray, int num) {
+    size_t counter;
+    size_t index;
+    for (size_t i = 0; i < bit_size; i++) {
+        if (bitArray[i] == 1) {
+            counter = bit_size - i;
+            index = i;
+            break;
+        } else {
+            counter = 0;
+            index = 0;
+        }
+    }
+    std::vector<unsigned short int> codeArray;
+    if (num == 0) {
+        return codeArray;
+    }
+    codeArray.push_back(0);
+    for (size_t i = bit_size - 1; i >= index; i--) {
+        codeArray.insert(codeArray.begin(), bitArray[i]);
+    }
+    int exponent;
+    
+    std::vector<unsigned short int> temp_vector;
+    int temp_exponent;
+    exponent = 100;
+    while (exponent > 2) {
+        exponent = log(counter - 1) / log(2) + 1;
+        temp_vector = fromIntToBitArray(counter - 1, exponent);
+        for (size_t i = temp_vector.size(); i > 0; i--) {
+            codeArray.insert(codeArray.begin(), temp_vector[i - 1]);
+        }
+        temp_vector.clear();
+        counter = exponent;
+    }
+    return codeArray;
+}
+
 int main() {
     //16 bit integers
     //    std::cout << "Input integer :";
-    int num = 10;
+    int num = 16;
     std::vector<std::vector<unsigned short int>> FixedCodeArray;
     std::vector<std::vector<unsigned short int>> YCodeArray;
     int temp_num = 0;
+    std::vector<unsigned short int> Array = fromIntToBitArray(num, bit_size);
+    std::vector<unsigned short int> codeWArray = getEliasWArray(Array, num);
+    for (size_t i = 0; i < codeWArray.size(); i++) {
+        std::cout << codeWArray[i];
+    }
+    std::cout << std::endl
+              << std::endl;
     while (temp_num <= num) {
         //calculate all codes
         std::vector<unsigned short int> bitArray = fromIntToBitArray(temp_num, bit_size);
