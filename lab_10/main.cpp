@@ -89,6 +89,9 @@ std::vector<unsigned short int> getEliasWArray(std::vector<unsigned short int> b
     std::vector<unsigned short int> codeArray;
     if (num == 0) {
         return codeArray;
+    } else if (num == 1) {
+        codeArray.push_back(0);
+        return codeArray;
     }
     codeArray.push_back(0);
     for (size_t i = bit_size - 1; i >= index; i--) {
@@ -99,6 +102,9 @@ std::vector<unsigned short int> getEliasWArray(std::vector<unsigned short int> b
     std::vector<unsigned short int> temp_vector;
     int temp_exponent;
     exponent = 100;
+    if (num == 2 || num == 3) {
+        return codeArray;
+    }
     while (exponent > 2) {
         exponent = log(counter - 1) / log(2) + 1;
         temp_vector = fromIntToBitArray(counter - 1, exponent);
@@ -122,7 +128,7 @@ int main() {
         std::vector<unsigned short int> bitArray = fromIntToBitArray(temp_num, bit_size);
         std::vector<unsigned short int> codeArray = getCodeArray(bitArray);
         std::vector<unsigned short int> codeYArray = getEliasYArray(bitArray, num);
-        std::vector<unsigned short int> codeWArray = getEliasWArray(bitArray, num);
+        std::vector<unsigned short int> codeWArray = getEliasWArray(bitArray, temp_num);
         YCodeArray.push_back(codeYArray);
         FixedCodeArray.push_back(codeArray);
         WCodeArray.push_back(codeWArray);
