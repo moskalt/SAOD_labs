@@ -115,8 +115,6 @@ std::vector<unsigned short int> getEliasWArray(std::vector<unsigned short int> b
 }
 
 int main() {
-    //16 bit integers
-    //    std::cout << "Input integer :";
     int num = 16;
     std::vector<std::vector<unsigned short int>> FixedCodeArray;
     std::vector<std::vector<unsigned short int>> YCodeArray;
@@ -144,16 +142,17 @@ int main() {
         std::cout << i << " - ";
         std::cout.width(0);
         for (size_t j = 0; j < size; j++) {
-            if (j % 4 == 0) {
-                std::cout << " ";
-            }
             std::cout << FixedCodeArray[i][j];
         }
-        std::cout << "   ";
-        if (YCodeArray[i].empty()) {
-            std::cout << "NaN";
+        int difSize = (int) FixedCodeArray[FixedCodeArray.size() - 1].size() - (int) FixedCodeArray[i].size();
+        for (int j = 0; j < difSize; ++j) {
+            std::cout << " ";
         }
-        std::cout.width(YCodeArray[YCodeArray.size() - 1].size());
+        std::cout << " ";
+        std::cout.width(0);
+        if (YCodeArray[i].empty()) {
+            std::cout<< "NaN";
+        }
         for (auto &j : YCodeArray[i]) {
             std::cout << j;
         }
