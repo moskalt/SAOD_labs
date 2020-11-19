@@ -15,11 +15,9 @@ std::vector<unsigned short int> fromIntToBitArray(int num, size_t size) {
     }
     return bitArray;
 }
-
 int getExp() {
     return (int) (log((double) bit_size) / log(2));
 }
-
 std::vector<unsigned short int> getCodeArray(std::vector<unsigned short int> bitArray) {
     size_t counter;
     size_t index;
@@ -75,7 +73,6 @@ std::vector<unsigned short int> getEliasYArray(std::vector<unsigned short int> b
     }
     return codeLength;
 }
-
 std::vector<unsigned short int> getEliasWArray(std::vector<unsigned short int> bitArray, int num) {
     size_t counter;
     size_t index;
@@ -98,7 +95,7 @@ std::vector<unsigned short int> getEliasWArray(std::vector<unsigned short int> b
         codeArray.insert(codeArray.begin(), bitArray[i]);
     }
     int exponent;
-    
+
     std::vector<unsigned short int> temp_vector;
     int temp_exponent;
     exponent = 100;
@@ -118,21 +115,17 @@ int main() {
     int num = 16;
     std::vector<std::vector<unsigned short int>> FixedCodeArray;
     std::vector<std::vector<unsigned short int>> YCodeArray;
+    std::vector<std::vector<unsigned short int>> WCodeArray;
     int temp_num = 0;
-    std::vector<unsigned short int> Array = fromIntToBitArray(num, bit_size);
-    std::vector<unsigned short int> codeWArray = getEliasWArray(Array, num);
-    for (size_t i = 0; i < codeWArray.size(); i++) {
-        std::cout << codeWArray[i];
-    }
-    std::cout << std::endl
-              << std::endl;
     while (temp_num <= num) {
         //calculate all codes
         std::vector<unsigned short int> bitArray = fromIntToBitArray(temp_num, bit_size);
         std::vector<unsigned short int> codeArray = getCodeArray(bitArray);
         std::vector<unsigned short int> codeYArray = getEliasYArray(bitArray, num);
+        std::vector<unsigned short int> codeWArray = getEliasWArray(bitArray, num);
         YCodeArray.push_back(codeYArray);
         FixedCodeArray.push_back(codeArray);
+        WCodeArray.push_back(codeWArray);
         temp_num++;
         bitArray.clear();
     }
@@ -148,12 +141,20 @@ int main() {
         for (int j = 0; j < difSize; ++j) {
             std::cout << " ";
         }
-        std::cout << " ";
+        std::cout << "  ";
         std::cout.width(0);
         if (YCodeArray[i].empty()) {
-            std::cout<< "NaN";
+            std::cout << "NaN";
         }
         for (auto &j : YCodeArray[i]) {
+            std::cout << j;
+        }
+        difSize = (int) YCodeArray[YCodeArray.size() - 1].size() - (int) YCodeArray[i].size();
+        for (int j = 0; j < difSize; ++j) {
+            std::cout << " ";
+        }
+        std::cout << "  ";
+        for (auto &j : WCodeArray[i]) {
             std::cout << j;
         }
         std::cout << std::endl;
