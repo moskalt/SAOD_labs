@@ -1,6 +1,6 @@
-#include <iostream>
-
-
+#include "codes.h"
 int main() {
-	return 0;
+    EncodingTools tool;
+    tool.menu((char *) "./example.txt");
+    return 0;
 }
