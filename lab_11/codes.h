@@ -99,8 +99,14 @@ protected:
         std::cout << "Error opening file..." << std::endl;
     }
     void output() {
+        double avrgLen = 0;
+        double entrophy = 0;
         for (int i = 0; i < m_matrix.size(); ++i) {
+            avrgLen += m_matrix[i].size() * m_probabilities[i];
+            entrophy -= m_probabilities[i] * log2(m_probabilities[i]);
+            std::cout.width(10);
             std::cout << " " <<m_data[i] << "    ";
+            std::cout.precision(5);
             std::cout << m_probabilities[i] << "    ";
             for (auto &j : m_matrix[i]) {
                 std::cout << j;
@@ -108,6 +114,8 @@ protected:
             std::cout << "   ";
             std::cout << m_matrix[i].size() << std::endl;
         }
+        std::cout << "Average code lenght: " << avrgLen << std::endl;
+        std::cout << "Entrophy: " << entrophy << std::endl;
     }
     void shannonCode() {
         std::cout << "Shannon code" << std::endl;
