@@ -37,8 +37,35 @@ private:
             quickSort(i, R);
         }
     }
+    void quickSortH(int L, size_t R) {
+        int i = L;
+        int j = R;
+        char temp = m_data[(i + j) / 2];
+
+        while (i <= j) {
+            while (m_data[i] < temp && i >= 0) {
+                i++;
+            }
+            while (m_data[j] > temp && j >= 0) {
+                j--;
+            }
+            if (i <= j) {
+                std::swap(m_probabilities[i], m_probabilities[j]);
+                std::swap(m_data[i], m_data[j]);
+                i++;
+                j--;
+            }
+        }
+        if (L < j) {
+            quickSortH(L, j);
+        }
+        if (i < R) {
+            quickSortH(i, R);
+        }
+    }
 
 protected:
+
     void readfile(char *path) {
         std::ifstream file(path, std::ios::in);
         if (file.is_open()) {
@@ -59,7 +86,7 @@ protected:
                     m_probabilities.push_back(1);
                 }
             }
-            quickSort(0, m_probabilities.size() - 1);
+            quickSort(0, m_data.size() - 1);
             int sumOfProbabilities = 0;
             for (auto &probability : m_probabilities) {
                 sumOfProbabilities += probability;
@@ -71,8 +98,8 @@ protected:
         }
         std::cout << "Error opening file..." << std::endl;
     }
-    void output() {
-        for (int i = 0; i < m_matrix.size(); ++i) {
+    void output(int a = 0) {
+        for (int i = a; i < m_matrix.size(); ++i) {
             for (auto &j : m_matrix[i]) {
                 std::cout << j;
             }
@@ -105,25 +132,30 @@ protected:
         }
         output();
     }
-    void HilbertMCode() {
+    void hilbertMCode() {
+        std::cout << std::endl;
+        quickSortH(0, m_probabilities.size() - 1);
         if (!m_probabilities.empty()) {
             m_matrix.clear();
             double pr = 0;
             std::vector<int> length(m_probabilities.size());
             std::vector<double> probSum(m_probabilities.size());
+            m_matrix.resize(m_probabilities.size());
             for (int i = 1; i < m_probabilities.size(); ++i) {
                 probSum[i] = pr + m_probabilities[i] / 2;
                 pr += m_probabilities[i];
                 length[i] = -(int) log2(m_probabilities[i]) + 1;
             }
             for (int i = 1; i < m_probabilities.size(); ++i) {
+                m_matrix[i].resize(length[i]);
                 for (int j = 1; j < length[i]; ++j) {
                     probSum[i] *= 2;
-                    m_matrix[i].push_back(probSum[i]);
-                    if (probSum[i] > 1) probSum[i] -= 1;
+                    m_matrix[i][j] = probSum[i];
+                    if (probSum[i] >= 1) probSum[i] --;
                 }
             }
         }
+        output(1);
     }
     ~EncodingTools() {
         m_probabilities.clear();
@@ -137,5 +169,6 @@ public:
     void menu(char *path) {
         readfile(path);
         shannonCode();
+        hilbertMCode();
     }
 };
