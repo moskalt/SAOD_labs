@@ -11,6 +11,34 @@ private:
     std::vector<char> m_data;
     std::vector<double> m_probabilities;
     std::vector<std::vector<int>> m_matrix;
+    void quickSort(int L, size_t R) {
+        int i = L;
+        int j = R;
+        double temp = m_probabilities[(i + j) / 2];
+
+        while (i <= j) {
+            while (m_probabilities[i] > temp) {
+                i++;
+            }
+            while (m_probabilities[j] < temp) {
+                j--;
+            }
+            if (i <= j) {
+                std::swap(m_probabilities[i], m_probabilities[j]);
+                std::swap(m_data[i], m_data[j]);
+                i++;
+                j--;
+            }
+        }
+        if (L < j) {
+            quickSort(L, j);
+        }
+        if (i < R) {
+            quickSort(i, R);
+        }
+    }
+
+protected:
     void readfile(char *path) {
         std::ifstream file(path, std::ios::in);
         if (file.is_open()) {
@@ -43,34 +71,15 @@ private:
         }
         std::cout << "Error opening file..." << std::endl;
     }
-    void quickSort(int L, size_t R) {
-        int i = L;
-        int j = R;
-        double temp = m_probabilities[(i + j) / 2];
-
-        while (i <= j) {
-            while (m_probabilities[i] > temp) {
-                i++;
+    void output() {
+        for (int i = 0; i < m_matrix.size(); ++i) {
+            for (auto &j : m_matrix[i]) {
+                std::cout << j;
             }
-            while (m_probabilities[j] < temp) {
-                j--;
-            }
-            if (i <= j) {
-                std::swap(m_probabilities[i], m_probabilities[j]);
-                std::swap(m_data[i], m_data[j]);
-                i++;
-                j--;
-            }
-        }
-        if (L < j) {
-            quickSort(L, j);
-        }
-        if (i < R) {
-            quickSort(i, R);
+            std::cout << "   ";
+            std::cout << m_probabilities[i] << std::endl;
         }
     }
-
-public:
     void shannonCode() {
         if (!m_probabilities.empty()) {
             m_matrix.clear();
@@ -94,13 +103,17 @@ public:
                 }
             }
         }
-        // output
+        output();
     }
     ~EncodingTools() {
         m_probabilities.clear();
         m_data.clear();
         m_matrix.clear();
     }
+};
+
+class Interface : public EncodingTools {
+public:
     void menu(char *path) {
         readfile(path);
         shannonCode();

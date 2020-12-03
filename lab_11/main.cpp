@@ -1,6 +1,6 @@
 #include "codes.h"
 int main() {
-    EncodingTools tool;
-    tool.menu((char *) "./example.txt");
+    Interface handler;
+    handler.menu((char *) "./example.txt");
     return 0;
 }
