@@ -105,6 +105,26 @@ protected:
         }
         output();
     }
+    void HilbertMCode() {
+        if (!m_probabilities.empty()) {
+            m_matrix.clear();
+            double pr = 0;
+            std::vector<int> length(m_probabilities.size());
+            std::vector<double> probSum(m_probabilities.size());
+            for (int i = 1; i < m_probabilities.size(); ++i) {
+                probSum[i] = pr + m_probabilities[i] / 2;
+                pr += m_probabilities[i];
+                length[i] = -(int) log2(m_probabilities[i]) + 1;
+            }
+            for (int i = 1; i < m_probabilities.size(); ++i) {
+                for (int j = 1; j < length[i]; ++j) {
+                    probSum[i] *= 2;
+                    m_matrix[i].push_back(probSum[i]);
+                    if (probSum[i] > 1) probSum[i] -= 1;
+                }
+            }
+        }
+    }
     ~EncodingTools() {
         m_probabilities.clear();
         m_data.clear();
