@@ -1,20 +1,20 @@
 ﻿  main.cpp
-C:\Users\Moskalt\source\repos\SAOD_labs\lab_11\codes.h(36,15): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Moskalt\source\repos\SAOD_labs\lab_11\codes.h(62,15): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Moskalt\source\repos\SAOD_labs\lab_11\codes.h(37,15): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Moskalt\source\repos\SAOD_labs\lab_11\codes.h(63,15): warning C4018: '<': signed/unsigned mismatch
 C:\Users\Moskalt\source\repos\SAOD_labs\lab_11\codes.h(92,1): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
 C:\Users\Moskalt\source\repos\SAOD_labs\lab_11\codes.h(102,27): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Moskalt\source\repos\SAOD_labs\lab_11\codes.h(117,51): warning C4244: '=': conversion from 'double' to '_Ty', possible loss of data
+C:\Users\Moskalt\source\repos\SAOD_labs\lab_11\codes.h(120,51): warning C4244: '=': conversion from 'double' to '_Ty', possible loss of data
           with
           [
               _Ty=int
           ]
-C:\Users\Moskalt\source\repos\SAOD_labs\lab_11\codes.h(120,55): warning C4244: '=': conversion from 'double' to '_Ty', possible loss of data
+C:\Users\Moskalt\source\repos\SAOD_labs\lab_11\codes.h(123,38): warning C4244: '=': conversion from 'double' to '_Ty', possible loss of data
           with
           [
               _Ty=int
           ]
-C:\Users\Moskalt\source\repos\SAOD_labs\lab_11\codes.h(124,38): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Moskalt\source\repos\SAOD_labs\lab_11\codes.h(126,47): warning C4244: '=': conversion from '_Ty' to '_Ty', possible loss of data
+C:\Users\Moskalt\source\repos\SAOD_labs\lab_11\codes.h(127,38): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Moskalt\source\repos\SAOD_labs\lab_11\codes.h(129,47): warning C4244: '=': conversion from '_Ty' to '_Ty', possible loss of data
           with
           [
               _Ty=double
@@ -23,14 +23,10 @@ C:\Users\Moskalt\source\repos\SAOD_labs\lab_11\codes.h(126,47): warning C4244: '
           [
               _Ty=int
           ]
-C:\Users\Moskalt\source\repos\SAOD_labs\lab_11\codes.h(144,31): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Moskalt\source\repos\SAOD_labs\lab_11\codes.h(149,31): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Moskalt\source\repos\SAOD_labs\lab_11\codes.h(153,47): warning C4244: '=': conversion from '_Ty' to '_Ty', possible loss of data
+C:\Users\Moskalt\source\repos\SAOD_labs\lab_11\codes.h(147,31): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Moskalt\source\repos\SAOD_labs\lab_11\codes.h(152,31): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Moskalt\source\repos\SAOD_labs\lab_11\codes.h(156,48): warning C4244: '=': conversion from 'double' to '_Ty', possible loss of data
           with
-          [
-              _Ty=double
-          ]
-          and
           [
               _Ty=int
           ]

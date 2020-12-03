@@ -100,7 +100,7 @@ protected:
     }
     void output() {
         for (int i = 0; i < m_matrix.size(); ++i) {
-            std::cout << m_data[i] << "    ";
+            std::cout << " " <<m_data[i] << "    ";
             std::cout << m_probabilities[i] << "    ";
             for (auto &j : m_matrix[i]) {
                 std::cout << j;
@@ -120,7 +120,7 @@ protected:
             length[0] = -log2(m_probabilities[0]) + 1;
             for (size_t i = 1; i < m_probabilities.size(); i++) {
                 probSum[i] = probSum[i - 1] + m_probabilities[i - 1];
-                length[i] = -log2(m_probabilities[i]) + 1;
+                length[i] = std::ceil(-log2(m_probabilities[i]));
             }
             for (size_t i = 0; i < m_probabilities.size(); i++) {
                 m_matrix[i].resize(length[i]);
@@ -147,13 +147,13 @@ protected:
             for (int i = 0; i < m_probabilities.size(); ++i) {
                 probSum[i] = pr + m_probabilities[i] / 2;
                 pr += m_probabilities[i];
-                length[i] = -(int) log2(m_probabilities[i]) + 1;
+                length[i] = (int)std::ceil(-log2(m_probabilities[i])) + 1;
             }
             for (int i = 0; i < m_probabilities.size(); ++i) {
                 m_matrix[i].resize(length[i]);
                 for (int j = 0; j < length[i]; ++j) {
                     probSum[i] *= 2;
-                    m_matrix[i][j] = probSum[i];
+                    m_matrix[i][j] = std::floor(probSum[i]);
                     if (probSum[i] >= 1) probSum[i]--;
                 }
             }
