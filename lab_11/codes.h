@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cmath>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -65,7 +66,6 @@ private:
     }
 
 protected:
-
     void readfile(char *path) {
         std::ifstream file(path, std::ios::in);
         if (file.is_open()) {
@@ -98,16 +98,19 @@ protected:
         }
         std::cout << "Error opening file..." << std::endl;
     }
-    void output(int a = 0) {
-        for (int i = a; i < m_matrix.size(); ++i) {
+    void output() {
+        for (int i = 0; i < m_matrix.size(); ++i) {
+            std::cout << m_data[i] << "    ";
+            std::cout << m_probabilities[i] << "    ";
             for (auto &j : m_matrix[i]) {
                 std::cout << j;
             }
             std::cout << "   ";
-            std::cout << m_probabilities[i] << std::endl;
+            std::cout << m_matrix[i].size() << std::endl;
         }
     }
     void shannonCode() {
+        std::cout << "Shannon code" << std::endl;
         if (!m_probabilities.empty()) {
             m_matrix.clear();
             std::vector<double> probSum(m_probabilities.size());
@@ -133,7 +136,7 @@ protected:
         output();
     }
     void hilbertMCode() {
-        std::cout << std::endl;
+        std::cout << "Hilbert M code" << std::endl;
         quickSortH(0, m_probabilities.size() - 1);
         if (!m_probabilities.empty()) {
             m_matrix.clear();
@@ -141,21 +144,21 @@ protected:
             std::vector<int> length(m_probabilities.size());
             std::vector<double> probSum(m_probabilities.size());
             m_matrix.resize(m_probabilities.size());
-            for (int i = 1; i < m_probabilities.size(); ++i) {
+            for (int i = 0; i < m_probabilities.size(); ++i) {
                 probSum[i] = pr + m_probabilities[i] / 2;
                 pr += m_probabilities[i];
                 length[i] = -(int) log2(m_probabilities[i]) + 1;
             }
-            for (int i = 1; i < m_probabilities.size(); ++i) {
+            for (int i = 0; i < m_probabilities.size(); ++i) {
                 m_matrix[i].resize(length[i]);
-                for (int j = 1; j < length[i]; ++j) {
+                for (int j = 0; j < length[i]; ++j) {
                     probSum[i] *= 2;
                     m_matrix[i][j] = probSum[i];
-                    if (probSum[i] >= 1) probSum[i] --;
+                    if (probSum[i] >= 1) probSum[i]--;
                 }
             }
         }
-        output(1);
+        output();
     }
     ~EncodingTools() {
         m_probabilities.clear();
@@ -169,6 +172,8 @@ public:
     void menu(char *path) {
         readfile(path);
         shannonCode();
+        std::cout << std::endl;
         hilbertMCode();
+        std::cout << std::endl;
     }
 };
