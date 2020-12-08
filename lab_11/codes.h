@@ -70,18 +70,20 @@ private:
     void clearMatrix() {
         m_matrix.clear();
         m_matrix.resize(m_probabilities.size());
+        probSum.clear();
+        length.clear();
     }
     int getProbabilitySize() {
         return m_probabilities.size();
     }
-    void calcLength() {
+    void calcLength(int a = 0) {
         double pr = 0;
         length.resize(m_probabilities.size());
         probSum.resize(m_probabilities.size());
         for (int i = 0; i < m_probabilities.size(); ++i) {
             probSum[i] = pr + m_probabilities[i] / 2;
             pr += m_probabilities[i];
-            length[i] = -(int) log2(m_probabilities[i]) + 1;
+            length[i] = (int) std::ceil(-log2(m_probabilities[i])) + a;
         }
     }
     void output() {
@@ -183,8 +185,7 @@ protected:
     void shannonCode() {
         std::cout << "Shannon code" << std::endl;
         calcLength();
-        m_matrix.clear();
-        m_matrix.resize(m_probabilities.size());
+        clearMatrix();
         for (size_t i = 0; i < m_probabilities.size(); i++) {
             m_matrix[i].resize(length[i]);
             for (size_t j = 0; j < length[i]; ++j) {
@@ -199,15 +200,14 @@ protected:
     }
     void hilbertMCode() {
         std::cout << "Hilbert M code" << std::endl;
-        calcLength();
+        calcLength(1);
+        clearMatrix();
         quickSortH(0, m_probabilities.size() - 1);
-        m_matrix.clear();
-        m_matrix.resize(m_probabilities.size());
         for (int i = 0; i < m_probabilities.size(); ++i) {
             m_matrix[i].resize(length[i]);
             for (int j = 0; j < length[i]; ++j) {
                 probSum[i] *= 2;
-                m_matrix[i][j] = probSum[i];
+                m_matrix[i][j] = std::floor(probSum[i]);
                 if (probSum[i] >= 1) probSum[i]--;
             }
         }
