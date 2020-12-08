@@ -14,11 +14,10 @@ private:
     std::vector<std::vector<int>> m_matrix;
     std::vector<int> length;
     std::vector<double> probSum;
-    void quickSort(int L, size_t R) {
+    void quickSortProbability(int L, size_t R) {
         int i = L;
         int j = R;
         double temp = m_probabilities[(i + j) / 2];
-
         while (i <= j) {
             while (m_probabilities[i] > temp) {
                 i++;
@@ -34,17 +33,16 @@ private:
             }
         }
         if (L < j) {
-            quickSort(L, j);
+            quickSortProbability(L, j);
         }
         if (i < R) {
-            quickSort(i, R);
+            quickSortProbability(i, R);
         }
     }
-    void quickSortH(int L, size_t R) {
+    void quickSortData(int L, size_t R) {
         int i = L;
         int j = R;
         char temp = m_data[(i + j) / 2];
-
         while (i <= j) {
             while (m_data[i] < temp && i >= 0) {
                 i++;
@@ -60,10 +58,10 @@ private:
             }
         }
         if (L < j) {
-            quickSortH(L, j);
+            quickSortData(L, j);
         }
         if (i < R) {
-            quickSortH(i, R);
+            quickSortData(i, R);
         }
     }
     // general methods
@@ -169,7 +167,7 @@ protected:
                     m_probabilities.push_back(1);
                 }
             }
-            quickSort(0, m_data.size() - 1);
+            quickSortProbability(0, m_data.size() - 1);
             int sumOfProbabilities = 0;
             for (auto &probability : m_probabilities) {
                 sumOfProbabilities += probability;
@@ -186,6 +184,7 @@ protected:
         std::cout << "Shannon code" << std::endl;
         calcLength();
         clearMatrix();
+        quickSortProbability(0, m_probabilities.size() - 1);
         for (size_t i = 0; i < m_probabilities.size(); i++) {
             m_matrix[i].resize(length[i]);
             for (size_t j = 0; j < length[i]; ++j) {
@@ -202,7 +201,7 @@ protected:
         std::cout << "Hilbert M code" << std::endl;
         calcLength(1);
         clearMatrix();
-        quickSortH(0, m_probabilities.size() - 1);
+        quickSortData(0, m_probabilities.size() - 1);
         for (int i = 0; i < m_probabilities.size(); ++i) {
             m_matrix[i].resize(length[i]);
             for (int j = 0; j < length[i]; ++j) {
@@ -243,14 +242,14 @@ protected:
     void encodeFano() {
         std::cout << "Fano code" << std::endl;
         clearMatrix();
-        quickSort(0, m_probabilities.size() - 1);
+        quickSortProbability(0, m_probabilities.size() - 1);
         fanoCode(0, getProbabilitySize() - 1);
         output();
     }
     void encodeHuffman() {
         std::cout << "Huffman code" << std::endl;
         clearMatrix();
-        quickSort(0, m_probabilities.size() - 1);
+        quickSortProbability(0, m_probabilities.size() - 1);
         for (auto &i : m_probabilities) {
             probabilitiesTmp.push_back(i);
         }
