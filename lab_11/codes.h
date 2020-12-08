@@ -12,6 +12,8 @@ private:
     std::vector<char> m_data;
     std::vector<double> m_probabilities;
     std::vector<std::vector<int>> m_matrix;
+    std::vector<int> length;
+    std::vector<double> probSum;
     void quickSort(int L, size_t R) {
         int i = L;
         int j = R;
@@ -64,6 +66,85 @@ private:
             quickSortH(i, R);
         }
     }
+    // general methods
+    void clearMatrix() {
+        m_matrix.clear();
+        m_matrix.resize(m_probabilities.size());
+    }
+    int getProbabilitySize() {
+        return m_probabilities.size();
+    }
+    void calcLength() {
+        double pr = 0;
+        length.resize(m_probabilities.size());
+        probSum.resize(m_probabilities.size());
+        for (int i = 0; i < m_probabilities.size(); ++i) {
+            probSum[i] = pr + m_probabilities[i] / 2;
+            pr += m_probabilities[i];
+            length[i] = -(int) log2(m_probabilities[i]) + 1;
+        }
+    }
+    void output() {
+        double averageLen = 0;
+        double entropy = 0;
+        for (int i = 0; i < m_matrix.size(); ++i) {
+            averageLen += m_matrix[i].size() * m_probabilities[i];
+            entropy -= m_probabilities[i] * log2(m_probabilities[i]);
+            std::cout.width(10);
+            std::cout << " " << m_data[i] << "    ";
+            std::cout.precision(5);
+            std::cout << m_probabilities[i] << "    ";
+            for (auto &j : m_matrix[i]) {
+                std::cout << j;
+            }
+            std::cout << "   ";
+            std::cout << m_matrix[i].size() << std::endl;
+        }
+        std::cout << "Average code length: " << averageLen << std::endl;
+        std::cout << "Entropy: " << entropy << std::endl;
+    }
+    // for huffman
+    std::vector<double> probabilitiesTmp;
+    int up(int n, double q) {
+        int j;
+        for (int i = n - 1; i >= 0; i--) {
+            if (i > 0 && probabilitiesTmp[i - 1] < q) {
+                probabilitiesTmp[i] = probabilitiesTmp[i - 1];
+                j = i;
+            } else {
+                j = i;
+                break;
+            }
+        }
+        probabilitiesTmp[j] = q;
+        return j;
+    }
+    void down(int n, int j) {
+        std::vector<int> s(m_matrix[j].size());
+        s = m_matrix[j];
+        for (int i = j; i < n - 1; i++) {
+            m_matrix[i] = m_matrix[i + 1];
+        }
+        m_matrix[n - 1] = s;
+        m_matrix[n] = s;
+        m_matrix[n - 1].push_back(0);
+        m_matrix[n].push_back(1);
+    }
+    // for fano
+    int calcMedian(int left, int right) {
+        long double sumLeft = 0, sumRight = m_probabilities[right];
+        unsigned long median;
+        for (int i = left; i < right; ++i) {
+            sumLeft += m_probabilities[i];
+        }
+        median = right;
+        while (sumLeft >= sumRight) {
+            --median;
+            sumLeft -= m_probabilities[median];
+            sumRight += m_probabilities[median];
+        }
+        return (int) median;
+    }
 
 protected:
     void readfile(char *path) {
@@ -98,46 +179,19 @@ protected:
         }
         std::cout << "Error opening file..." << std::endl;
     }
-    void output() {
-        double avrgLen = 0;
-        double entrophy = 0;
-        for (int i = 0; i < m_matrix.size(); ++i) {
-            avrgLen += m_matrix[i].size() * m_probabilities[i];
-            entrophy -= m_probabilities[i] * log2(m_probabilities[i]);
-            std::cout.width(10);
-            std::cout << " " <<m_data[i] << "    ";
-            std::cout.precision(5);
-            std::cout << m_probabilities[i] << "    ";
-            for (auto &j : m_matrix[i]) {
-                std::cout << j;
-            }
-            std::cout << "   ";
-            std::cout << m_matrix[i].size() << std::endl;
-        }
-        std::cout << "Average code lenght: " << avrgLen << std::endl;
-        std::cout << "Entrophy: " << entrophy << std::endl;
-    }
+    // encode methods
     void shannonCode() {
         std::cout << "Shannon code" << std::endl;
-        if (!m_probabilities.empty()) {
-            m_matrix.clear();
-            std::vector<double> probSum(m_probabilities.size());
-            std::vector<int> length(m_probabilities.size());
-            m_matrix.resize(m_probabilities.size());
-            probSum[0] = 0;
-            length[0] = -log2(m_probabilities[0]) + 1;
-            for (size_t i = 1; i < m_probabilities.size(); i++) {
-                probSum[i] = probSum[i - 1] + m_probabilities[i - 1];
-                length[i] = std::ceil(-log2(m_probabilities[i]));
-            }
-            for (size_t i = 0; i < m_probabilities.size(); i++) {
-                m_matrix[i].resize(length[i]);
-                for (size_t j = 0; j < length[i]; ++j) {
-                    probSum[i] *= 2;
-                    m_matrix[i][j] = probSum[i];
-                    if (probSum[i] >= 1) {
-                        probSum[i]--;
-                    }
+        calcLength();
+        m_matrix.clear();
+        m_matrix.resize(m_probabilities.size());
+        for (size_t i = 0; i < m_probabilities.size(); i++) {
+            m_matrix[i].resize(length[i]);
+            for (size_t j = 0; j < length[i]; ++j) {
+                probSum[i] *= 2;
+                m_matrix[i][j] = probSum[i];
+                if (probSum[i] >= 1) {
+                    probSum[i]--;
                 }
             }
         }
@@ -145,33 +199,63 @@ protected:
     }
     void hilbertMCode() {
         std::cout << "Hilbert M code" << std::endl;
+        calcLength();
         quickSortH(0, m_probabilities.size() - 1);
-        if (!m_probabilities.empty()) {
-            m_matrix.clear();
-            double pr = 0;
-            std::vector<int> length(m_probabilities.size());
-            std::vector<double> probSum(m_probabilities.size());
-            m_matrix.resize(m_probabilities.size());
-            for (int i = 0; i < m_probabilities.size(); ++i) {
-                probSum[i] = pr + m_probabilities[i] / 2;
-                pr += m_probabilities[i];
-                length[i] = (int)std::ceil(-log2(m_probabilities[i])) + 1;
-            }
-            for (int i = 0; i < m_probabilities.size(); ++i) {
-                m_matrix[i].resize(length[i]);
-                for (int j = 0; j < length[i]; ++j) {
-                    probSum[i] *= 2;
-                    m_matrix[i][j] = std::floor(probSum[i]);
-                    if (probSum[i] >= 1) probSum[i]--;
-                }
+        m_matrix.clear();
+        m_matrix.resize(m_probabilities.size());
+        for (int i = 0; i < m_probabilities.size(); ++i) {
+            m_matrix[i].resize(length[i]);
+            for (int j = 0; j < length[i]; ++j) {
+                probSum[i] *= 2;
+                m_matrix[i][j] = probSum[i];
+                if (probSum[i] >= 1) probSum[i]--;
             }
         }
         output();
     }
-    ~EncodingTools() {
-        m_probabilities.clear();
-        m_data.clear();
-        m_matrix.clear();
+    void fanoCode(int left, int right) {
+        if (left < right) {
+            int median = calcMedian(left, right);
+            for (int i = left; i <= right; ++i) {
+                if (i <= median)
+                    m_matrix[i].push_back(0);
+                else
+                    m_matrix[i].push_back(1);
+            }
+            fanoCode(left, median);
+            fanoCode(median + 1, right);
+        }
+    }
+    void huffmanCode(int n) {
+        double q;
+        int j;
+        if (n == 1) {
+            m_matrix[0].push_back(0);
+            m_matrix[1].push_back(1);
+        } else {
+            q = probabilitiesTmp[n - 1] + probabilitiesTmp[n];
+            j = up(n, q);
+            huffmanCode(n - 1);
+            down(n, j);
+        }
+    }
+    // interface for encode
+    void encodeFano() {
+        std::cout << "Fano code" << std::endl;
+        clearMatrix();
+        quickSort(0, m_probabilities.size() - 1);
+        fanoCode(0, getProbabilitySize() - 1);
+        output();
+    }
+    void encodeHuffman() {
+        std::cout << "Huffman code" << std::endl;
+        clearMatrix();
+        quickSort(0, m_probabilities.size() - 1);
+        for (auto &i : m_probabilities) {
+            probabilitiesTmp.push_back(i);
+        }
+        huffmanCode((int) m_probabilities.size() - 1);
+        output();
     }
 };
 
@@ -179,6 +263,10 @@ class Interface : public EncodingTools {
 public:
     void menu(char *path) {
         readfile(path);
+        encodeFano();
+        std::cout << std::endl;
+        encodeHuffman();
+        std::cout << std::endl;
         shannonCode();
         std::cout << std::endl;
         hilbertMCode();
