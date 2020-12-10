@@ -71,9 +71,6 @@ private:
         probSum.clear();
         length.clear();
     }
-    int getProbabilitySize() {
-        return m_probabilities.size();
-    }
     void calcLength(int a = 0) {
         double pr = 0;
         length.resize(m_probabilities.size());
@@ -90,19 +87,17 @@ private:
         for (int i = 0; i < m_matrix.size(); ++i) {
             averageLen += m_matrix[i].size() * m_probabilities[i];
             entropy -= m_probabilities[i] * log2(m_probabilities[i]);
-            std::cout.width(10);
             std::cout << " " << m_data[i] << "    ";
-            std::cout.precision(5);
-            std::cout << m_probabilities[i] << "    ";
+            std::cout << std::setw(5) << std::to_string(m_probabilities[i]) << "    ";
+            std::cout << m_matrix[i].size() << "    ";
             for (auto &j : m_matrix[i]) {
                 std::cout << j;
             }
-            std::cout << "   ";
-            std::cout << m_matrix[i].size() << std::endl;
+            std::cout << std::endl;
         }
         std::cout << "Average code length: " << averageLen << std::endl;
         std::cout << "Entropy: " << entropy << std::endl;
-    }
+    };
     // for huffman
     std::vector<double> probabilitiesTmp;
     int up(int n, double q) {
@@ -243,7 +238,7 @@ protected:
         std::cout << "Fano code" << std::endl;
         clearMatrix();
         quickSortProbability(0, m_probabilities.size() - 1);
-        fanoCode(0, getProbabilitySize() - 1);
+        fanoCode(0, (int) m_probabilities.size() - 1);
         output();
     }
     void encodeHuffman() {
