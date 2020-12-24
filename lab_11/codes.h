@@ -128,17 +128,17 @@ private:
     // for fano
     int calcMedian(int left, int right) {
         long double sumLeft = 0, sumRight = m_probabilities[right];
-        unsigned long median;
+        int median;
         for (int i = left; i < right; ++i) {
             sumLeft += m_probabilities[i];
         }
         median = right;
-        while (sumLeft >= sumRight) {
+        do {
             --median;
             sumLeft -= m_probabilities[median];
             sumRight += m_probabilities[median];
-        }
-        return (int) median;
+        } while (sumLeft >= sumRight);
+        return median;
     }
 
 protected:
@@ -177,8 +177,8 @@ protected:
     // encode methods
     void shannonCode() {
         std::cout << "Shannon code" << std::endl;
-        calcLength();
         clearMatrix();
+        calcLength();
         quickSortProbability(0, m_probabilities.size() - 1);
         for (size_t i = 0; i < m_probabilities.size(); i++) {
             m_matrix[i].resize(length[i]);
@@ -194,9 +194,9 @@ protected:
     }
     void hilbertMCode() {
         std::cout << "Hilbert M code" << std::endl;
-        calcLength(1);
         clearMatrix();
         quickSortData(0, m_probabilities.size() - 1);
+        calcLength(1);
         for (int i = 0; i < m_probabilities.size(); ++i) {
             m_matrix[i].resize(length[i]);
             for (int j = 0; j < length[i]; ++j) {
@@ -251,6 +251,7 @@ protected:
         huffmanCode((int) m_probabilities.size() - 1);
         output();
     }
+
 };
 
 class Interface : public EncodingTools {
